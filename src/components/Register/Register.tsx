@@ -4,16 +4,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
-interface Props {
-  userList: object;
-  newUser: object;
-}
 const Register: React.FC = (Props) => {
-  const [userList, newUser] = useState({
-    username: "",
-    password: "",
-  });
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   toast.configure();
 
   const errorToast = () => {
@@ -36,7 +29,8 @@ const Register: React.FC = (Props) => {
         emailValue.value !== ""
       ) {
         history.push("/login");
-        newUser({ username: emailValue.value, password: passwordValue.value });
+        setUsername(emailValue.value);
+        setPassword(passwordValue.value);
       } else {
         errorToast();
       }

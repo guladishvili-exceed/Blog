@@ -1,17 +1,24 @@
 import React, { useState, useRef } from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Register.css";
 
 interface Props {
   userList: object;
   newUser: object;
 }
-
 const Register: React.FC = (Props) => {
   const [userList, newUser] = useState({
     username: "",
     password: "",
   });
+
+  toast.configure();
+
+  const errorToast = () => {
+    toast.info("Registration Error");
+  };
 
   let passwordEl = useRef<HTMLInputElement>(null);
   let confirmpasswordEl = useRef<HTMLInputElement>(null);
@@ -19,7 +26,7 @@ const Register: React.FC = (Props) => {
 
   let history = useHistory();
 
-  let registerUser = () => {
+  const registerUser = () => {
     let emailValue = emailEl.current;
     let passwordValue = passwordEl.current;
     let confirmPassword = confirmpasswordEl.current;
@@ -28,11 +35,10 @@ const Register: React.FC = (Props) => {
         passwordValue.value === confirmPassword.value &&
         emailValue.value != ""
       ) {
-        alert("Succesfull Registration");
         history.push("/login");
         newUser({ username: emailValue.value, password: passwordValue.value });
       } else {
-        alert("Passwords Must Match and Username must not be empty");
+        errorToast();
       }
     }
   };

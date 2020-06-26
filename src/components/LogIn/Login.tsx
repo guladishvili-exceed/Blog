@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import "./Login.css";
+import "./style.css";
 
-class LogIn extends Component {
-  render() {
+const LogIn = () => {
+  {
     return (
       <div className={"container"}>
         <h1 className={"logInh1"}>Log In</h1>
@@ -24,6 +24,6 @@ class LogIn extends Component {
       </div>
     );
   }
-}
+};
 
 export default LogIn;

@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Register.css";
+import "./style.css";
 
 interface Props {
   userList: object;
@@ -33,7 +33,7 @@ const Register: React.FC = (Props) => {
     if (emailValue && passwordValue && confirmPassword) {
       if (
         passwordValue.value === confirmPassword.value &&
-        emailValue.value != ""
+        emailValue.value !== ""
       ) {
         history.push("/login");
         newUser({ username: emailValue.value, password: passwordValue.value });

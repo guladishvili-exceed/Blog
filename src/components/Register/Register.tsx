@@ -1,17 +1,13 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
-const Register: React.FC = (Props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Register : React.FunctionComponent  = () => {
   toast.configure();
 
-  const errorToast = () => {
-    toast.info("Registration Error");
-  };
+
 
   let passwordEl = useRef<HTMLInputElement>(null);
   let confirmpasswordEl = useRef<HTMLInputElement>(null);
@@ -19,23 +15,36 @@ const Register: React.FC = (Props) => {
 
   let history = useHistory();
 
-  const registerUser = () => {
+  const registerUser  = () => {
     let emailValue = emailEl.current;
     let passwordValue = passwordEl.current;
     let confirmPassword = confirmpasswordEl.current;
+
     if (emailValue && passwordValue && confirmPassword) {
       if (
-        passwordValue.value === confirmPassword.value &&
-        emailValue.value !== ""
+        passwordValue.value !== confirmPassword.value
       ) {
+        toast.info("Registration Error");
+      } else if (passwordValue.value && confirmPassword.value === '') {
+        toast.info("Registration Error");
+      } else if (emailValue.value === '') {
+        toast.info("Registration Error");
+      } 
+      else {
+        toast.info('Registration Went Succesful') 
         history.push("/login");
-        setUsername(emailValue.value);
-        setPassword(passwordValue.value);
-      } else {
-        errorToast();
       }
     }
   };
+
+  const handleKeyPress = (event: { key: string; }) => {
+    if (event.key === 'Enter') {
+        {
+            registerUser()
+        }
+    }
+}
+
 
   return (
     <div className="container">
@@ -45,6 +54,7 @@ const Register: React.FC = (Props) => {
           ref={emailEl}
           type={"text"}
           placeholder={"Enter your username"}
+          onKeyPress = {handleKeyPress}
         />
       </div>
       <div className="password">
@@ -52,6 +62,7 @@ const Register: React.FC = (Props) => {
           ref={passwordEl}
           type={"password"}
           placeholder={"Enter your password"}
+          onKeyPress = {handleKeyPress}
         />
       </div>
       <div className="confirmPassword">
@@ -59,6 +70,7 @@ const Register: React.FC = (Props) => {
           ref={confirmpasswordEl}
           type={"password"}
           placeholder={"Confirm your password"}
+          onKeyPress = {handleKeyPress}
         />
       </div>
       <div id={"buttons"} className="buttons">

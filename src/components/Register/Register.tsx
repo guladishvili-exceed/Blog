@@ -1,17 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef} from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
+import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
 const Register : React.FunctionComponent  = () => {
-  toast.configure();
-
 
 
   let passwordEl = useRef<HTMLInputElement>(null);
   let confirmpasswordEl = useRef<HTMLInputElement>(null);
   let emailEl = useRef<HTMLInputElement>(null);
+
+  toast.configure();
 
   let history = useHistory();
 
@@ -31,8 +32,17 @@ const Register : React.FunctionComponent  = () => {
         toast.info("Registration Error");
       } 
       else {
-        toast.info('Registration Went Succesful') 
-        history.push("/login");
+          //Axios Request
+          axios.post(`http://localhost:4000/addUser`,{
+              username:emailValue.value,
+              password:passwordValue.value
+          }).then(res=>{
+              toast.info('Registration was Successful')
+              history.push('/login')
+              console.log('res',res)
+          }).catch(err =>{
+              console.log('--------err', err);
+          })
       }
     }
   };

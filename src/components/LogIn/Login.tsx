@@ -1,18 +1,13 @@
-import React, {useRef} from "react";
+import React, {useRef,useState} from "react";
 import { useHistory } from "react-router-dom";
+import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
 const LogIn : React.FunctionComponent  = () => {
 
-  const mockUser : {
-    username : string;
-    password : string;
-  } = {
-    username : 'admin',
-    password : '123'
-  }
+
 
   let usernameEl = useRef<HTMLInputElement>(null)
   let passwordEl = useRef<HTMLInputElement>(null)
@@ -24,18 +19,29 @@ const LogIn : React.FunctionComponent  = () => {
     let passwordValue = passwordEl.current
 
     if (usernameValue && passwordValue) {
-      if (usernameValue.value  !== mockUser.username ) {
-        toast.info('Invalid Login')
-      } else if (passwordValue.value !== mockUser.password) {
-        toast.info('Invalid Login')
-      } 
-      else {
-        toast.info('Succesful Login')
-        localStorage.setItem('username',mockUser.username)
-        history.push('/homepage')
+      if(usernameValue.value === "" || passwordValue.value === "") {
+        toast.info('Invalid login')
+      } else {
+        //Axios Request
+        localStorage.setItem("username",usernameValue.value)
+        axios.post(`http://localhost:4000/logIn`,{
+          username : usernameValue.value,
+          password : passwordValue.value
+        })
+            .then(
+                res => {
+                console.log('--------res', res);
+                localStorage.setItem('auth-token',res.data)
+                toast.info('Successful Login')
+                history.push('/homepage')
+            })
+            .catch(
+                err => {
+                  console.log('--------err', err)
+                  toast.info('Invalid Login')}
+            )
       }
     }
-
   }
 
   const handleKeyPress = (event: { key: string; }) => {

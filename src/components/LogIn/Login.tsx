@@ -1,18 +1,20 @@
 import React, {useRef,useState} from "react";
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
+import {bindActionCreators} from "redux";
+import {connect,useDispatch} from "react-redux";
+import {LogedIn} from '../../Redux/actions/blogRelated'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
 const LogIn : React.FunctionComponent  = () => {
 
-
-
-  let usernameEl = useRef<HTMLInputElement>(null)
-  let passwordEl = useRef<HTMLInputElement>(null)
-  let history  = useHistory()
-  toast.configure()
+             const dispatch = useDispatch()
+          let usernameEl = useRef<HTMLInputElement>(null)
+       let passwordEl = useRef<HTMLInputElement>(null)
+     let history  = useHistory()
+   toast.configure()
 
   const submitLogin = () => {
     let usernameValue  = usernameEl.current
@@ -24,7 +26,7 @@ const LogIn : React.FunctionComponent  = () => {
       } else {
         //Axios Request
         localStorage.setItem("username",usernameValue.value)
-        axios.post(`http://localhost:4000/logIn`,{
+        axios.post(`http://localhost:4000/logIn/${localStorage.getItem("auth-token")}`,{
           username : usernameValue.value,
           password : passwordValue.value
         })
@@ -32,8 +34,8 @@ const LogIn : React.FunctionComponent  = () => {
                 res => {
                 console.log('--------res', res);
                 localStorage.setItem('auth-token',res.data)
-                toast.info('Successful Login')
                 history.push('/homepage')
+                toast.info('Successful login')
             })
             .catch(
                 err => {
@@ -71,4 +73,22 @@ const LogIn : React.FunctionComponent  = () => {
     );  
 };
 
-export default LogIn;
+const mapStateToProps = (state: any) => {
+    return {
+        logedIn: state.logedIn
+    }
+}
+const mapDispatchToProps = (dispatch : any ) => {
+    return {
+        actions: bindActionCreators(
+            {
+             LogedIn
+            },
+            dispatch
+        ),
+    };
+};
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(LogIn);

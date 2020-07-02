@@ -4,8 +4,7 @@ import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './style.css'
-import {bindActionCreators} from 'redux'
-import {connect,useDispatch,useSelector} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import * as actions from '../../Redux/actions/blogRelated'
 
 const Posts : React.FunctionComponent = () => {
@@ -15,7 +14,7 @@ const Posts : React.FunctionComponent = () => {
     let descriptionRef = useRef<HTMLTextAreaElement>(null)
     const history = useHistory()
     const dispatch = useDispatch()
-    const currentUser = useSelector(state => state)
+    let posts : any = useSelector((state : any)  => state.posts)
     toast.configure()
 
     useEffect(() => {
@@ -35,6 +34,8 @@ const Posts : React.FunctionComponent = () => {
     })
 
 
+
+
     const submitPost = () => {
         let titleValue  = titleRef.current
         let descriptionValue = descriptionRef.current
@@ -50,11 +51,12 @@ const Posts : React.FunctionComponent = () => {
                     .then((res) => {
                         toast.info('Topic added succesfuly')
                         history.push('/homepage')
-                        if (titleValue) {
-                            dispatch(actions.addPost(titleValue.value))
+                        const { title,description,username } = res.data
+                        if (titleValue && descriptionValue) {
+                            dispatch(actions.addPost({title,description,username}))
                         }
-
                         console.log('--------res', res);
+                        console.log('--------posts', posts.id);
                     })
                     .catch((err) => {
                         console.log('--------err', err);
@@ -73,7 +75,7 @@ const Posts : React.FunctionComponent = () => {
                 <div className="inputs">
                     <p>Topic Title</p>
                     <input type={'text'} ref = {titleRef} placeholder={'Topic Title'} />
-                    <p>Topic Description</p>
+                    <p>Topic Description  </p>
                     <textarea  ref = {descriptionRef}  placeholder={'Topic Description'}/>
                 </div>
                 <div >
@@ -83,21 +85,7 @@ const Posts : React.FunctionComponent = () => {
         </div>
     )
 }
-// const mapStateToProps = (state : any) => {
-//     return {
-//         posts : state.posts
-//     }
-// }
-//
-// const mapDispatchToProps = (dispatch : any ) => {
-//     return {
-//         actions: bindActionCreators(
-//             {
-//             },
-//             dispatch
-//         ),
-//     };
-// };
+
 
 export default Posts;
 

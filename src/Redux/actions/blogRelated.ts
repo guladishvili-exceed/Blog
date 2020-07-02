@@ -1,20 +1,16 @@
 import {actionTypes} from "./actionTypes";
 
- export const LogedIn = () => {
+
+export const addPost = (payload: Object) => {
     return {
-        type:actionTypes.LOG_IN
+        type: actionTypes.ADD_POST,
+        payload,
     }
 }
 
-export const LogOut = () => {
+export const getPost = (posts : Object[] ) => {
     return {
-        type:actionTypes.LOG_OUT
+        type : actionTypes.GET_POSTS,
+        posts,
     }
-}
-
-export const addPost = (value : String) => {
-     return {
-         type:actionTypes.ADD_POST,
-         value,
-     }
 }

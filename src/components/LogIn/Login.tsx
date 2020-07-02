@@ -1,16 +1,12 @@
 import React, {useRef,useState} from "react";
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
-import {bindActionCreators} from "redux";
-import {connect,useDispatch} from "react-redux";
-import {LogedIn} from '../../Redux/actions/blogRelated'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 
 const LogIn : React.FunctionComponent  = () => {
 
-             const dispatch = useDispatch()
           let usernameEl = useRef<HTMLInputElement>(null)
        let passwordEl = useRef<HTMLInputElement>(null)
      let history  = useHistory()
@@ -73,22 +69,8 @@ const LogIn : React.FunctionComponent  = () => {
     );  
 };
 
-const mapStateToProps = (state: any) => {
-    return {
-        logedIn: state.logedIn
-    }
-}
-const mapDispatchToProps = (dispatch : any ) => {
-    return {
-        actions: bindActionCreators(
-            {
-             LogedIn
-            },
-            dispatch
-        ),
-    };
-};
 
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(LogIn);
+
+export default LogIn;

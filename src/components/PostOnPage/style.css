@@ -9,4 +9,5 @@
 
 #card {
     height: auto;
+    word-wrap: break-word;
 }

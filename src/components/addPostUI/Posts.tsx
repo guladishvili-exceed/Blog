@@ -17,6 +17,7 @@ const Posts : React.FunctionComponent = () => {
     let posts : any = useSelector((state : any)  => state.posts)
     toast.configure()
 
+    //Checks if token is presented
     useEffect(() => {
         axios
             .get(`http://localhost:4000/`,{
@@ -35,7 +36,7 @@ const Posts : React.FunctionComponent = () => {
 
 
 
-
+    //Add Post to the page
     const submitPost = () => {
         let titleValue  = titleRef.current
         let descriptionValue = descriptionRef.current

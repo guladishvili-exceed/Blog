@@ -2,23 +2,23 @@ import {actionTypes} from "./actions/actionTypes";
 import {Reducer} from "redux";
 
 interface IAppState {
-    posts : Object[];
+    posts: Object[];
 }
 
-const initialState : IAppState = {
-    posts : []
+const initialState: IAppState = {
+    posts: []
 };
-const reducer:Reducer = (state:IAppState= initialState, action : any) => {
+const reducer: Reducer = (state: IAppState = initialState, action: any) => {
     const {posts} = state
     switch (action.type) {
         case actionTypes.ADD_POST:
             return {
                 ...state,
-                posts : [
+                posts: [
                     ...posts,
                     {
-                        title : action.payload.title,
-                        description : action.payload.description,
+                        title: action.payload.title,
+                        description: action.payload.description,
                     }
                 ]
 
@@ -26,7 +26,24 @@ const reducer:Reducer = (state:IAppState= initialState, action : any) => {
         case actionTypes.GET_POSTS:
             return {
                 ...state,
-                posts : action.posts
+                posts: action.posts
+            }
+        case actionTypes.GET_COMMENT:
+            return {
+                ...state,
+                comments: action.comments
+            }
+
+        case actionTypes.ADD_COMMENT:
+            return {
+                ...state,
+                posts : [
+                    ...posts,
+                    {
+                        comment : action.payload.comment,
+                    }
+                ]
+
             }
 
         default:

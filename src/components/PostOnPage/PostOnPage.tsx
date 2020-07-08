@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useLocation} from "react-router"
-import {Link, useHistory} from "react-router-dom";
-import { useDispatch, useSelector} from 'react-redux'
+import {useHistory} from "react-router-dom";
+import {useDispatch, useSelector, connect} from 'react-redux'
 import * as actions from '../../Redux/actions/blogRelated'
 import {v4 as uuidv4} from "uuid";
 import "./style.css";
@@ -9,8 +9,7 @@ import axios from "axios";
 import {toast} from "react-toastify";
 
 
-const PostOnPage: React.FunctionComponent<any> = () => {
-
+const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
 
     //Checks if token is presented
     useEffect(() => {
@@ -31,13 +30,25 @@ const PostOnPage: React.FunctionComponent<any> = () => {
     }, []);
 
     useEffect(() => {
-        console.log('-------hello');
-    })
+        const getAllCommentsOnCurrentPostFromBE = (id: Number) => {
+            axios.get(`http://localhost:4000/getComment/${id}`)
+                .then(res => {
+                    console.log('--------res,get', res.data);
+                    dispatch(actions.getComment(res.data))
+                })
+                .catch(err => {
+                    console.log('--------err', err);
+                })
+        }
+        getAllCommentsOnCurrentPostFromBE(grabIdFromLocation())
+    },[])
+
 
     const LogOut = () => {
         localStorage.clear();
         history.push("/login");
     };
+
 
     //Hooks
 
@@ -47,7 +58,6 @@ const PostOnPage: React.FunctionComponent<any> = () => {
     let descriptionRef = React.useRef<HTMLTextAreaElement>(null)
     let commentRef = React.useRef<HTMLInputElement>(null)
     const dispatch = useDispatch()
-    let posts: any = useSelector((state: any) => state.posts);
 
 
     // - - - - - - - - - - - - - - - - - - -
@@ -78,14 +88,6 @@ const PostOnPage: React.FunctionComponent<any> = () => {
         }
     }
 
-    const grabCommentsFromLocation = () => {
-        if (location.state) {
-            let commentArray = location.state.post.items.comment
-            let listItems = commentArray.map((item: Object[]) => {return <p key={uuidv4()}>{item}</p>})
-            return listItems
-        }
-    }
-
 // - - - - - - -- - - - - - - -- - - - - - -- - -
 
     //Delete post from DB and Page
@@ -100,6 +102,19 @@ const PostOnPage: React.FunctionComponent<any> = () => {
                     console.log('--------err', err);
                 })
         }
+    }
+    
+    //Delete all comments when post is being deleted 
+    const deleteCommentsWhenPostIsDeleted = (id : Number) => {
+        axios.delete(`http://localhost:4000/deleteAllComments/${id}`)
+            .then((post) => {
+                console.log('--------post', post);
+                deletePost(id)
+
+            })
+            .catch((err) =>{
+                console.log('--------err', err);
+            })
     }
 
     //Update post in DB and Page
@@ -126,16 +141,14 @@ const PostOnPage: React.FunctionComponent<any> = () => {
     }
 
     //Add Comment
-    let commentarr : Object[]  = []
     const addComment = (id: Number) => {
         let commentValue = commentRef.current
         if (commentValue) {
             if (commentValue.value === "") {
                 return toast.info('Can not add empty comment')
             } else {
-                commentarr.push(commentValue.value)
                 axios.post(`http://localhost:4000/addComment/${id}`, {
-                    comment: posts.comment
+                    comment: commentValue.value
                 })
                     .then((res) => {
                         if (commentValue) {
@@ -152,20 +165,6 @@ const PostOnPage: React.FunctionComponent<any> = () => {
             }
         }
     }
-
-    //Get all comments on current post
-    const getAllCommentsOnCurrentPostFromBE = (id: Number) => {
-        axios.get(`http://localhost:4000/getComment/${id}`)
-            .then(res => {
-                console.log('--------posts', posts);
-                console.log('--------res,get', res.data);
-            })
-            .catch(err => {
-                console.log('--------err', err);
-            })
-    }
-
-    getAllCommentsOnCurrentPostFromBE(grabIdFromLocation())
 
 
     const cancelEdit = () => {
@@ -240,7 +239,7 @@ const PostOnPage: React.FunctionComponent<any> = () => {
                     <div>
                         <div>
                             <button onClick={() => {
-                                deletePost(grabIdFromLocation())
+                                deleteCommentsWhenPostIsDeleted(grabIdFromLocation())
                             }}>Delete Post
                             </button>
                             <button onClick={() => {
@@ -249,18 +248,15 @@ const PostOnPage: React.FunctionComponent<any> = () => {
                             </button>
                         </div>
                         <ul>
-                            {Array.isArray(posts) &&
-                            posts.map((items: any) => {
-                                return (
-                                    <div>
+                            {
+                                comments.map((items: any) => {
+                                    return (
                                         <p
                                             key={uuidv4()}
-                                        >{items.comment}
-                                            <button>Delete</button>
+                                        >Comment : {items.comment}
                                         </p>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
                         </ul>
                     </div>
 
@@ -296,15 +292,15 @@ const PostOnPage: React.FunctionComponent<any> = () => {
 
                     <div>
                         <ul>
-                            {Array.isArray(posts) &&
-                            posts.map((items: any) => {
-                                return (
-                                    <p
-                                        key={uuidv4()}
-                                    >{items.comment}
-                                    </p>
-                                );
-                            })}
+                            {
+                                comments.map((items: any) => {
+                                    return (
+                                        <p
+                                            key={uuidv4()}
+                                        >Comment : {items.comment}
+                                        </p>
+                                    );
+                                })}
                         </ul>
                     </div>
                     <div className="comments">
@@ -320,4 +316,12 @@ const PostOnPage: React.FunctionComponent<any> = () => {
     );
 };
 
-export default PostOnPage;
+
+const mapStateToProps = (state: any) => {
+    console.log('--------state', state);
+    return {
+        comments: state.comments,
+    }
+};
+
+export default connect(mapStateToProps)(PostOnPage);

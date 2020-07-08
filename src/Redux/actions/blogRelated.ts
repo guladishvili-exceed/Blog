@@ -1,5 +1,4 @@
 import {actionTypes} from "./actionTypes";
-import {act} from "react-dom/test-utils";
 
 
 export const addPost = (payload: Object) => {

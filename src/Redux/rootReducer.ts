@@ -3,13 +3,15 @@ import {Reducer} from "redux";
 
 interface IAppState {
     posts: Object[];
+    comments: Object[];
 }
 
 const initialState: IAppState = {
-    posts: []
+    posts: [],
+    comments: []
 };
 const reducer: Reducer = (state: IAppState = initialState, action: any) => {
-    const {posts} = state
+    const {posts,comments} = state
     switch (action.type) {
         case actionTypes.ADD_POST:
             return {
@@ -29,16 +31,17 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
                 posts: action.posts
             }
         case actionTypes.GET_COMMENT:
+            console.log('--------action.comments', action.comments);
             return {
                 ...state,
-                comments: action.comments
+                comments: [...action.comments]
             }
 
         case actionTypes.ADD_COMMENT:
             return {
                 ...state,
                 posts : [
-                    ...posts,
+                    ...comments,
                     {
                         comment : action.payload.comment,
                     }

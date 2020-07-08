@@ -10,10 +10,13 @@
 
 
 #card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    margin: auto;
     text-align: center;
-    margin:0 auto;
+    height: auto !important;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-
 
 ul {
     list-style: none !important;

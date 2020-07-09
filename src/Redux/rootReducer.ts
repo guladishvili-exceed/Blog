@@ -3,7 +3,7 @@ import {Reducer} from "redux";
 
 interface IAppState {
     posts: Object[];
-    comments: Object[];
+    comments: any;
 }
 
 const initialState: IAppState = {
@@ -31,7 +31,6 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
                 posts: action.posts
             }
         case actionTypes.GET_COMMENT:
-            console.log('--------action.comments', action.comments);
             return {
                 ...state,
                 comments: [...action.comments]
@@ -40,13 +39,20 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
         case actionTypes.ADD_COMMENT:
             return {
                 ...state,
-                posts : [
+                comments : [
                     ...comments,
                     {
-                        comment : action.payload.comment,
+                        comment : action.payload,
+                        commentid : action.id
                     }
                 ]
 
+            }
+
+        case action.DELETE_COMMENT:
+            return {
+                ...state ,
+                comments : comments.filter((item : any) => item.commentid !== action.id)
             }
 
         default:

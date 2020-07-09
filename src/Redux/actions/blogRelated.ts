@@ -8,23 +8,31 @@ export const addPost = (payload: Object) => {
     }
 }
 
-export const getPost = (posts : Object[] ) => {
+export const getPost = (posts: Object[]) => {
     return {
-        type : actionTypes.GET_POSTS,
+        type: actionTypes.GET_POSTS,
         posts,
     }
 }
 
-export const getComment = (comments : Object[]) => {
+export const getComment = (comments: Object[]) => {
     return {
-        type : actionTypes.GET_COMMENT,
+        type: actionTypes.GET_COMMENT,
         comments
     }
 }
 
-export const addComment = (payload : any) => {
+export const addComment = (payload: any, id : any) => {
     return {
         type: actionTypes.ADD_COMMENT,
-        payload
+        payload,
+        id
+    }
+}
+
+export const deleteComment = (id: any) => {
+    return {
+        type: actionTypes.DELETE_COMMENT,
+        id
     }
 }

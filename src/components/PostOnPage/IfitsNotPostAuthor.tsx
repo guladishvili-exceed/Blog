@@ -1,147 +1,187 @@
-import React from 'react'
-import {v4 as uuidv4} from "uuid";
-import {useHistory} from "react-router-dom";
-import {useLocation} from "react-router"
-import {useDispatch, connect} from 'react-redux'
+import React, { Fragment, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useRouteMatch } from "react-router";
+import { useDispatch, connect, useSelector } from "react-redux";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 import * as actions from "../../Redux/actions/blogRelated";
-import {toast} from "react-toastify";
-import IsCommentAuthor from "./IsCommentAuthor";
-import IsNotCommentAuthor from "./IsNotCommentAuthor";
+import { v4 as uuidv4 } from "uuid";
+import * as reusableFunction from "../reusable functions/reusablefunctions";
 
 
 const IfitsNotPostAuthor: React.FunctionComponent<any> = ({comments}) => {
-    const history = useHistory();
-    const location: any = useLocation()
-    let commentRef = React.useRef<HTMLInputElement>(null)
-    const [editMode, editModeSwitch] = React.useState<boolean>(false)
-    const dispatch = useDispatch()
 
-    const LogOut = () => {
-        localStorage.clear();
-        history.push("/login");
-    };
+  const history = useHistory();
+  const match = useRouteMatch();
+  const dispatch = useDispatch();
+  const [commentMode,commentEditMode] = React.useState<boolean>(false)
+  const topic: any = useSelector((state: any) => state.topic)
 
 
-    const grabUsernameFromLocation = () => {
-        if (location.state) {
-            return location.state.post.items.username
-        }
-    }
+  const username = localStorage.getItem("username")
+  let commentRef = React.useRef<HTMLInputElement>(null);
 
-    const grabTitleFromLocation = () => {
-        if (location.state) {
-            return location.state.post.items.title
-        }
-    }
+  useEffect(() => {
+    reusableFunction.checkIfTokenIsPresented()
+  });
 
-    const grabDescriptionFromLocation = () => {
-        if (location.state) {
-            return location.state.post.items.description
-        }
-    }
-
-    const grabIdFromLocation = () => {
-        if (location.state) {
-            return location.state.post.items.id
-        }
-    }
-
-    const addComment = (id: Number) => {
-        let commentValue = commentRef.current
-        if (commentValue) {
-            if (commentValue.value === "") {
-                return toast.info('Can not add empty comment')
-            } else {
-                axios.post(`http://localhost:4000/addComment/${id}`, {
-                    comment: commentValue.value,
-                    username: localStorage.getItem('username')
-                })
-                    .then((res) => {
-                        if (commentValue) {
-                            let commentVal = commentValue.value
-                            const {commentid} = res.data
-                            dispatch(actions.addComment(commentVal, commentid))
-                        }
-                        console.log('--------comment', res.data);
-                    })
-                    .catch((err) => {
-                        toast.info("Server error")
-                        console.log('--------err', err);
-                    })
-            }
-        }
-    }
-
-
-    const checkCommentAuthor = (): boolean => {
-        return comments.map((item: any): boolean => {
-            if (item.username === localStorage.getItem('username')) {
-                return true
-            } else {
-                return false
-            }
+  useEffect(() => {
+    const getCurrentTopicDataFromBE = () => {
+      // @ts-ignore
+      axios.get(`http://localhost:4000/getTopic/${match.params.postId}`)
+        .then((res) => {
+          dispatch(actions.getTopic({...res.data}));
+          console.log('--------res', res.data);
         })
     }
+    getCurrentTopicDataFromBE()
+  }, [])
 
 
-    return (
-         (
-                <div id="card" className="card">
-                    <div id="postButtons" className="buttons">
-                        <button onClick={() => history.push("/homepage")}>Home</button>
-                        <button onClick={() => history.push("/profile")}>My Profile</button>
-                        <button onClick={() => LogOut()}>Log Out</button>
-                    </div>
-                    <div className="posts">
-                        <p>
-                            Author :
-                            {grabUsernameFromLocation()}
-                        </p>
-                        <p>
-                            Title :
-                            {grabTitleFromLocation()}
-                        </p>
+  const LogOut = () => {
+    localStorage.clear();
+    history.push("/login");
+  };
 
-                        <p>
-                            Description :
-                            {grabDescriptionFromLocation()}
-                        </p>
+  const grabUsernameFromReduxStoreTopic = () => {
+    return topic.username
 
-                        <div>
-                            <ul>
-                                {
-                                    comments.map((items: any) => {
-                                        return (
-                                            <p
-                                                key={uuidv4()}
-                                            >Comment :
-                                                {items.comment}
-                                            </p>
-                                        );
-                                    })}
-                            </ul>
-                        </div>
-                        <div className="comments">
-                            <input ref={commentRef} placeholder={'Write Comment'}/>
-                            <button onClick={() => {
-                                addComment(grabIdFromLocation())
-                            }}>Add Comment
-                            </button>
-                        </div>
-                    </div>
-                </div>) ?
-            checkCommentAuthor() :  (
-                    <IsCommentAuthor/>
-                    ) :  (<IsNotCommentAuthor/>)
+  }
 
-    )
-}
+  const grabTitleFromReduxStoreTopic = () => {
+    return topic.title
 
-const mapStateToProps = (state: any) => {
-    return {
-        comments: state.comments,
+  };
+  const grabDescriptionFromReduxStoreTopic = () => {
+    return topic.description
+
+  };
+
+  const grabIdFromReduxStoreTopic = () => {
+    return topic.id
+
+  };
+
+  const getAllCommentsOnCurrentPostFromBE = (id: Number) => {
+    axios
+      .get(`http://localhost:4000/getComment/${id}`)
+      .then((res) => {
+        console.log("--------res,get", res.data);
+        dispatch(actions.getComment(res.data));
+      })
+      .catch((err) => {
+        console.log("--------err", err);
+      });
+  };
+
+  const addComment = (id: Number) => {
+    let commentValue = commentRef.current;
+    if (commentValue) {
+      if (commentValue.value === "") {
+        return toast.info("Can not add empty comment");
+      } else {
+        axios
+          .post(`http://localhost:4000/addComment/${id}`, {
+            comment: commentValue.value,
+            username: localStorage.getItem("username"),
+          })
+          .then((res) => {
+            if (commentValue) {
+              // @ts-ignore
+              getAllCommentsOnCurrentPostFromBE(match.params.postId);
+            }
+            console.log("--------comment", res.data);
+          })
+          .catch((err) => {
+            toast.info("Server error");
+            console.log("--------err", err);
+          });
+      }
     }
+  };
+
+  const deleteComment = (id: Number) => {
+    axios
+      .delete(`http://localhost:4000/deleteComment/${id}`)
+      .then((res) => {
+        // @ts-ignore
+        getAllCommentsOnCurrentPostFromBE(grabIdFromReduxStoreTopic());
+        console.log("--------res", res);
+      })
+      .catch((err) => {
+        console.log("--------err", err);
+      });
+  };
+
+  const editComment = () => {
+      commentEditMode(true)
+  };
+
+  return commentMode ? (
+    <div>
+      <input/>
+    </div>
+  ) : (<div id="card" className="card">
+    <div id="postButtons" className="buttons">
+      <button onClick={() => history.push("/homepage")}>Home</button>
+      <button onClick={() => history.push("/profile")}>My Profile</button>
+      <button onClick={() => LogOut()}>Log Out</button>
+    </div>
+
+    <div className="posts">
+      <p>Author :{grabUsernameFromReduxStoreTopic()}</p>
+
+      <p>Title :{grabTitleFromReduxStoreTopic()}</p>
+
+      <p>Description :{grabDescriptionFromReduxStoreTopic()}</p>
+
+      <div>
+        <ul>
+          {comments.map((comment: any) => {
+            if (comment.username === username) {
+              return (
+                <p key={uuidv4()}>
+                  Comment : {comment.comment}
+                  <button onClick={() => commentEditMode(true)}>Edit</button>
+                  <button onClick={() => {
+                    deleteComment(comment.commentid)
+                  }}>Delete
+                  </button>
+                </p>
+              );
+            } else {
+              return (
+                <p key={uuidv4()}>
+                  Comment : {comment.comment}
+                </p>
+              );
+            }
+          })}
+        </ul>
+      </div>
+
+      <div className="comments">
+        <input ref={commentRef} placeholder={"Write Comment"}/>
+        <button
+          onClick={() => {
+            // @ts-ignore
+            addComment(match.params.postId);
+          }}
+        >
+          Add Comment
+        </button>
+      </div>
+    </div>
+  </div>
+  )
 };
 
-export default connect(mapStateToProps)(IfitsNotPostAuthor)
+const mapStateToProps = (state: any) => {
+  return {
+    comments: state.comments,
+    topic: state.topic
+  };
+};
+
+export default connect(mapStateToProps)(IfitsNotPostAuthor);

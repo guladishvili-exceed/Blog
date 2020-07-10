@@ -1,0 +1,59 @@
+.card {
+    box-sizing: content-box;
+    border-radius: 10px;
+    height: auto;
+    margin-left: 120px;
+    width: 85%;
+    text-align: center;
+    padding:10px;
+    word-wrap: break-word;
+}
+
+.navbar {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.navbar button {
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    margin-bottom: 100px;
+    text-decoration: none;
+}
+
+#posts {
+    margin-top:200px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    color: cadetblue;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bolder;
+    font-size: 20px;
+    margin-top:20px;
+}
+
+li:hover {
+    text-decoration: underline;
+}
+
+li:active {
+    color: black;
+}
+
+li:visited {
+    color: purple;
+}
+
+  
+
+  

@@ -4,14 +4,16 @@ import {Reducer} from "redux";
 interface IAppState {
     posts: Object[];
     comments: any;
+    topic : any;
 }
 
 const initialState: IAppState = {
     posts: [],
-    comments: []
+    comments: [],
+    topic : []
 };
 const reducer: Reducer = (state: IAppState = initialState, action: any) => {
-    const {posts,comments} = state
+    const {posts,comments,topic} = state
     switch (action.type) {
         case actionTypes.ADD_POST:
             return {
@@ -53,6 +55,12 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
             return {
                 ...state ,
                 comments : comments.filter((item : any) => item.commentid !== action.id)
+            }
+
+        case actionTypes.GET_TOPIC:
+            return {
+                ...state,
+                topic: {...action.topic}
             }
 
         default:

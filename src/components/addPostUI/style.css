@@ -1,0 +1,17 @@
+textarea {
+    width: 400px;
+    height: 300px;
+    border:2px solid cadetblue;
+    border-radius: 8px;
+
+}
+
+.inputs > input {
+    width:400px;
+    border:2px solid cadetblue;
+    border-radius: 8px;
+}
+
+#submit  {
+    margin-top:45px;
+}

@@ -1,0 +1,53 @@
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+    height: 780px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+
+  .title,p {
+    color: lightsteelblue;
+    font-weight: 600 !important;
+    font-size: 18px;
+    margin-top: 25px;
+    text-transform:uppercase;
+  }
+
+
+  h1 {
+      color :cadetblue !important;
+      text-align: center;
+      margin-top:25px;
+      text-transform:uppercase;
+  }
+
+   .navbar {
+    overflow: hidden;
+    position: fixed; 
+    top: 0; 
+    width: 85%; 
+  
+   }
+   .fa {
+    padding: 5px;
+    font-size: 12px;
+    width: 50px;
+    text-align: center;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+
+
+
+img {
+    height: 500px;
+    border: 3px solid cadetblue;
+    border-radius: 10px;
+    margin-top: 80px;
+
+}
+
+

@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import './style.css'
 import { useDispatch, useSelector} from 'react-redux'
 import * as actions from '../../Redux/actions/blogRelated'
+import * as reusableFunction from "../reusable functions/reusablefunctions";
 
 const Posts : React.FunctionComponent = () => {
 
@@ -19,20 +20,8 @@ const Posts : React.FunctionComponent = () => {
 
     //Checks if token is presented
     useEffect(() => {
-        axios
-            .get(`http://localhost:4000/`,{
-                headers : {
-                    "auth-token" : localStorage.getItem("auth-token")}
-            })
-            .then((res) => {
-                console.log('--------res.data', res.data);
-            })
-            .catch((err) => {
-                console.log("err", err);
-                toast.info('You must Log In')
-                history.push('/login')
-            });
-    })
+        reusableFunction.checkIfTokenIsPresented()
+    });
 
 
 

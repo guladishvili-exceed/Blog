@@ -30,9 +30,9 @@ export const addComment = (payload: any, id : any) => {
     }
 }
 
-export const deleteComment = (id: any) => {
+export const getTopic = (topic: Object[]) => {
     return {
-        type: actionTypes.DELETE_COMMENT,
-        id
+        type: actionTypes.GET_TOPIC,
+        topic,
     }
 }

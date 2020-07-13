@@ -26,3 +26,9 @@ li {
     color : cadetblue;
     list-style: none;
 }
+
+label {
+    font-family: "Manjari Bold";
+    font-size : 25px;
+    color:cadetblue;
+}

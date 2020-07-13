@@ -14,18 +14,18 @@ import IfitsNotPostAuthor from "./IfitsNotPostAuthor";
 
 const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
   const dispatch = useDispatch();
-  const match = useRouteMatch();
+  const match : any = useRouteMatch();
   const username = localStorage.getItem("username");
-  let posts: any = useSelector((state: any) => state.posts);
 
+  const topic: any = useSelector((state: any) => state.topic)
+  
   //Checks if token is presented
-  useEffect(() => {
+  useEffect(() : void => {
     reusableFunction.checkIfTokenIsPresented()
   });
 
-  useEffect(() => {
+  useEffect(() : void => {
     const getAllCommentsOnCurrentPostFromBE = () => {
-      // @ts-ignore
       axios.get(`http://localhost:4000/getComment/${match.params.postId}`)
         .then((res) => {
           console.log("--------res,get", res.data);
@@ -38,15 +38,26 @@ const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
     getAllCommentsOnCurrentPostFromBE();
   }, []);
 
+  useEffect(() => {
+    const getCurrentTopicDataFromBE = () : void => {
+      axios.get(`http://localhost:4000/getTopic/${match.params.postId}`)
+        .then((res) => {
+          dispatch(actions.getTopic({...res.data}));
+          console.log('--------res', res.data);
+        })
+    }
+    getCurrentTopicDataFromBE()
+  }, [])
 
 
-  const checkPostAuthor = () => {
-    return posts.every(
-      (item: any) => item.username === username || username === 'admin'
-    );
+  const checkPostAuthor = () : any => {
+    if (username === topic.username || username === "admin") {
+      return true
+    } else {
+      return false
+    }
   };
 
-console.log('--------checkPostAuthor()', checkPostAuthor());
 
   return (
      checkPostAuthor() ? (

@@ -2,18 +2,22 @@ import {actionTypes} from "./actions/actionTypes";
 import {Reducer} from "redux";
 
 interface IAppState {
-    posts: Object[];
-    comments: any;
-    topic : any;
+    posts: object[];
+    comments: object[];
+    topic : object;
+    users : object[];
+    singleUser : object
 }
 
 const initialState: IAppState = {
     posts: [],
     comments: [],
-    topic : []
+    topic : [],
+    users : [],
+    singleUser : {}
 };
 const reducer: Reducer = (state: IAppState = initialState, action: any) => {
-    const {posts,comments,topic} = state
+    const {posts,comments,topic,singleUser} = state
     switch (action.type) {
         case actionTypes.ADD_POST:
             return {
@@ -57,12 +61,31 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
                 comments : comments.filter((item : any) => item.commentid !== action.id)
             }
 
+
         case actionTypes.GET_TOPIC:
             return {
                 ...state,
                 topic: {...action.topic}
             }
+        case actionTypes.EDIT_COMMENT:
+            const editedItems = comments.map((item: any) =>
+              item.commentid !== action.id ? item : {...item, comment: action.value}
+            );
+            return {
+                ...state,
+                comments: editedItems,
+            }
 
+        case actionTypes.GET_USERS:
+            return {
+                ...state,
+                users: action.users
+            }
+        case actionTypes.GET_USER:
+            return {
+                ...state,
+                singleUser: action.singleUser
+            }
         default:
             return {
                 ...state,

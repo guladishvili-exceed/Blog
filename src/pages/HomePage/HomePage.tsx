@@ -21,15 +21,16 @@ const HomePage: React.FC = () => {
 
 
   let posts: any = useSelector((state: any) => state.posts);
+  let users : any = useSelector((state : any) => state.users)
   toast.configure();
 
   //Checks if token is presented
-  useEffect(() => {
+  useEffect(() : void => {
     reusableFunction.checkIfTokenIsPresented()
   });
 
   //Generates all post from DB on page
-  useEffect(() => {
+  useEffect(() : void => {
     axios
       .get("http://localhost:4000/getPost")
       .then((res) => {
@@ -41,7 +42,22 @@ const HomePage: React.FC = () => {
       });
   }, []);
 
-  const getPostById = (id: Number) => {
+
+  //Generates all users from DB and adds it to the storage Users
+  useEffect(() : void => {
+    axios
+      .get("http://localhost:4000/getUsers")
+      .then((res) => {
+        dispatch(actions.getUsers(res.data));
+        console.log("--------res", res.data);
+      })
+      .catch((err) => {
+        console.log("--------err", err);
+      });
+  }, []);
+
+
+  const getPostById = (id: Number) : void => {
     axios
       .get(`http://localhost:4000/getTopic/${id}`)
       .then((post) => {
@@ -52,16 +68,24 @@ const HomePage: React.FC = () => {
       })
   }
 
+  //Filtering users to find which user is currently logged in
+  const user = users.filter((user : any) => user.username === localStorage.getItem('username'))
 
-  const LogOut = () => {
+
+
+
+  const LogOut = () : void  => {
     localStorage.clear();
     history.push("/login");
   };
 
+
   return (
     <div className="card">
       <div className="navbar">
-        <button onClick={() => history.push("/profile")}>My Profile</button>
+        {user.map((user : any) => {
+        return  <Link key={uuidv4()} to={`/profile/${user.id}`}><button key={uuidv4()}>My Profile</button></Link>
+        })}
         <button onClick={() => history.push("/posts")}>New Topic</button>
         <button onClick={() => LogOut()}>Log Out</button>
       </div>

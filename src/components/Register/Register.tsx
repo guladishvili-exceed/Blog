@@ -17,9 +17,9 @@ const Register : React.FunctionComponent  = () => {
   let history = useHistory();
 
   const registerUser  = () => {
-    let emailValue = emailEl.current;
-    let passwordValue = passwordEl.current;
-    let confirmPassword = confirmpasswordEl.current;
+    let emailValue : HTMLInputElement | null = emailEl.current;
+    let passwordValue : HTMLInputElement | null  = passwordEl.current;
+    let confirmPassword :  HTMLInputElement | null = confirmpasswordEl.current;
 
     if (emailValue && passwordValue && confirmPassword) {
       if (
@@ -47,7 +47,7 @@ const Register : React.FunctionComponent  = () => {
     }
   };
 
-  const handleKeyPress = (event: { key: string; }) => {
+  const handleKeyPress = (event: { key: string; }) : void => {
     if (event.key === 'Enter') {
         {
             registerUser()

@@ -7,24 +7,24 @@ import axios from "axios";
 import * as actions from "../../Redux/actions/blogRelated";
 import { toast } from "react-toastify";
 import * as reusableFunction from "../reusable functions/reusablefunctions";
+import Comments from "../CurrentPageComments/Comments";
 
 const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
   let commentRef = React.useRef<HTMLInputElement>(null);
   let descriptionRef = React.useRef<HTMLTextAreaElement>(null);
   const [editMode, editModeSwitch] = React.useState<boolean>(false);
   const topic: any = useSelector((state: any) => state.topic)
-  const username = localStorage.getItem("username")
-  const match = useRouteMatch();
+  const match : any = useRouteMatch();
   const dispatch = useDispatch();
   const history = useHistory();
+  const username = localStorage.getItem("username")
 
-  useEffect(() => {
+  useEffect(() : void => {
     reusableFunction.checkIfTokenIsPresented()
   });
 
-  useEffect(() => {
-    const getCurrentTopicDataFromBE = () => {
-      // @ts-ignore
+  useEffect(() : void => {
+    const getCurrentTopicDataFromBE = () : void  => {
       axios.get(`http://localhost:4000/getTopic/${match.params.postId}`)
         .then((res) => {
           dispatch(actions.getTopic({...res.data}));
@@ -35,31 +35,31 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
   }, [])
 
 
-  const LogOut = () => {
+  const LogOut = () : void  => {
     localStorage.clear();
     history.push("/login");
   };
 
-  const grabUsernameFromReduxStoreTopic  = () => {
+  const grabUsernameFromReduxStoreTopic  = () : string => {
     return topic.username
 
   }
 
-  const grabTitleFromReduxStoreTopic = () => {
+  const grabTitleFromReduxStoreTopic = () : string => {
     return topic.title
 
   };
-  const grabDescriptionFromReduxStoreTopic  = () => {
+  const grabDescriptionFromReduxStoreTopic  = () : string => {
     return topic.description
 
   };
 
-  const grabIdFromReduxStoreTopic  = () => {
+  const grabIdFromReduxStoreTopic  = () : number => {
     return topic.id
 
   };
 
-  const deletePost = (id: Number) => {
+  const deletePost = (id: Number) : void  => {
       axios
         .delete(`http://localhost:4000/deleteTopic/${id}`)
         .then((post) => {
@@ -71,7 +71,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
         });
   };
 
-  const deleteCommentsWhenPostIsDeleted = (id: Number) => {
+  const deleteCommentsWhenPostIsDeleted = (id: Number) : void  => {
     axios
       .delete(`http://localhost:4000/deleteAllComments/${id}`)
       .then((post) => {
@@ -83,7 +83,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
       });
   };
 
-  const submitPostEdit = (id: Number) => {
+  const submitPostEdit = (id: Number) : void => {
     let descriptionValue = descriptionRef.current;
       if (descriptionValue) {
         axios
@@ -103,8 +103,16 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
     }
   };
 
-  const addComment = (id: Number) => {
-    let commentValue = commentRef.current;
+  const cancelEdit = () : void => {
+    let descriptionValue = descriptionRef.current;
+    if (descriptionValue) {
+      descriptionValue.value = topic.description;
+    }
+    editModeSwitch(false);
+  };
+
+  const addComment = (id: Number) : any => {
+    let commentValue : HTMLInputElement | null = commentRef.current;
     if (commentValue) {
       if (commentValue.value === "") {
         return toast.info("Can not add empty comment");
@@ -116,7 +124,6 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
           })
           .then((res) => {
             if (commentValue) {
-              // @ts-ignore
               getAllCommentsOnCurrentPostFromBE(match.params.postId);
             }
             console.log("--------comment", res.data);
@@ -129,35 +136,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
     }
   };
 
-  const deleteComment = (id: Number) => {
-    axios
-      .delete(`http://localhost:4000/deleteComment/${id}`)
-      .then((res) => {
-        getAllCommentsOnCurrentPostFromBE(grabIdFromReduxStoreTopic());
-        console.log("--------res", res);
-      })
-      .catch((err) => {
-        console.log("--------err", err);
-      });
-  };
 
-  const editComment = () => {
-    comments.map((item: any) => {
-      if (item.username === localStorage.getItem("username")) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  };
-
-  const cancelEdit = () => {
-    let descriptionValue = descriptionRef.current;
-    if (descriptionValue) {
-      descriptionValue.value = topic.description;
-    }
-    editModeSwitch(false);
-  };
 
   const getAllCommentsOnCurrentPostFromBE = (id: Number) => {
     axios
@@ -229,20 +208,16 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
             {comments.map((comment: any) => {
               if (comment.username === username) {
                 return (
-                  <p key={uuidv4()}>
-                    Comment : {comment.comment}
-                    <button>Edit</button>
-                    <button onClick={() => {deleteComment(comment.commentid)}}>Delete</button>
-                  </p>
-                );
+                  <Comments
+                    key={uuidv4()}
+                    comment = {comment}
+                    topicid = {grabIdFromReduxStoreTopic()}/>
+                )
               } else {
-                return (
-                  <p key={uuidv4()}>
-                    Comment : {comment.comment}
-                  </p>
-                );
+                return <p key={uuidv4()}>Comment : {comment.comment}</p>
               }
             })}
+
           </ul>
         </div>
 
@@ -250,7 +225,6 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
           <input ref={commentRef} placeholder={"Write Comment"}/>
           <button
             onClick={() => {
-              // @ts-ignore
               addComment(match.params.postId);
             }}
           >

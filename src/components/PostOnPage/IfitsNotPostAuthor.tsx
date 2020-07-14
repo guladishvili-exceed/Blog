@@ -104,7 +104,6 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = ({comments}) => {
   return  (<div id="card" className="card">
       <div id="postButtons" className="buttons">
         <button onClick={() => history.push("/homepage")}>Home</button>
-        <button onClick={() => history.push("/profile")}>My Profile</button>
         <button onClick={() => LogOut()}>Log Out</button>
       </div>
 

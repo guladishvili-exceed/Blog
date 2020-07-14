@@ -10,11 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 const Profile = () => {
 
   const history = useHistory()
-  const [img, newImg] = useState()
+  const [file, setFile] = useState()
+  const [img,setImg] = useState()
   const match : any = useRouteMatch()
   const dispatch = useDispatch()
 
   let user : any = useSelector((state : any) => state.singleUser)
+  let {avatar} = user
+
   const fileRef = React.createRef<HTMLImageElement>()
 
   useEffect((): void => {
@@ -26,35 +29,44 @@ const Profile = () => {
         .get(`http://localhost:4000/getUser/${match.params.userId}`)
         .then((users) => {
           dispatch(actions.getUser(users.data))
-          console.log('--------img', img);
         })
         .catch((err) => {
           console.log('--------err', err);
         })
   },[])
 
-  const fileselectedHandler = (event: any): void => {
-    newImg(URL.createObjectURL(event.target.user.avatar[0]))
+  window.onload = () => {
+    setImg(avatar)
+    console.log('--------avatar', avatar);
   }
 
-  const fileuploadHandler = (): void => {
-    const fd = new FormData()
-    fd.append('avatar', img)
-    axios.post(`http://localhost:4000/upload/${match.params.userId}`,fd)
-      .then(res => {
-        console.log(res)
-        console.log('--------img', img);
+  const fileselectedHandler = (event: any): void => {
+    setFile((event.target.files[0]))
+    setImg(URL.createObjectURL(event.target.files[0]))
+  }
+  const fileuploadHandler = (e : any)  => {
+    e.preventDefault()
+    const data = new FormData()
+    data.append('avatar', file)
+      axios.post(`http://localhost:4000/upload/${match.params.userId}`,data, {
+        headers : {
+          'Content-Type' : 'multipart/form-data'
+        }
       })
-      .catch(err =>
-        console.log('--------err', err)
-      )
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err =>
+          console.log('--------err', err)
+        )
+
   }
 
 
   return (
     <div className={'card'}>
       <div className={'profile'}>
-        <img ref={fileRef} src={user.avatar} width={'400'} alt={'picture'}/>
+        <img ref={fileRef} src={img} width={'400'} alt={'picture'}/>
         <div>
           <input name='avatar' onChange={fileselectedHandler} type={'file'}/>
           <button onClick={fileuploadHandler}>Upload Picture</button>

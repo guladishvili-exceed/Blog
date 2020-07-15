@@ -9,14 +9,19 @@ import { toast } from "react-toastify";
 import * as reusableFunction from "../reusable functions/reusablefunctions";
 import Comments from "../CurrentPageComments/Comments";
 
-const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
+const IfisPostAuthor: React.FunctionComponent<any> = () => {
   let commentRef = React.useRef<HTMLInputElement>(null);
   let descriptionRef = React.useRef<HTMLTextAreaElement>(null);
+
   const [editMode, editModeSwitch] = React.useState<boolean>(false);
+
   const topic: any = useSelector((state: any) => state.topic)
+  const comments : any = useSelector((state : any) => state.comments)
+
   const match : any = useRouteMatch();
   const dispatch = useDispatch();
   const history = useHistory();
+
   const username = localStorage.getItem("username")
 
   useEffect(() : void => {
@@ -235,10 +240,5 @@ const IfisPostAuthor: React.FunctionComponent<any> = ({ comments }) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    comments: state.comments,
-  };
-};
 
-export default connect(mapStateToProps)(IfisPostAuthor);
+export default IfisPostAuthor;

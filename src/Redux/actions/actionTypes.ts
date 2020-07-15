@@ -7,5 +7,7 @@ export const actionTypes = {
     EDIT_COMMENT:"EDIT_COMMENT",
     GET_TOPIC : "GET_TOPIC",
     GET_USERS : "GET_USERS",
-    GET_USER : "GET_USER"
+    GET_USER : "GET_USER",
+    PAGE_COUNT : "PAGE_COUNT",
+    CHANGE_PAGE:"PAGE_CHANGE",
 }

@@ -6,7 +6,10 @@ interface IAppState {
     comments: object[];
     topic : object;
     users : object[];
-    singleUser : object
+    singleUser : object;
+    currentPage : number;
+    pageCount : number;
+    itemsPerPage : number;
 }
 
 const initialState: IAppState = {
@@ -14,7 +17,10 @@ const initialState: IAppState = {
     comments: [],
     topic : [],
     users : [],
-    singleUser : {}
+    singleUser : {},
+    currentPage: 1,
+    pageCount: 1,
+    itemsPerPage:10,
 };
 const reducer: Reducer = (state: IAppState = initialState, action: any) => {
     const {posts,comments,topic,singleUser} = state
@@ -86,6 +92,20 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
                 ...state,
                 singleUser: action.singleUser
             }
+
+        case actionTypes.PAGE_COUNT:
+            const setPageCount = Math.ceil(posts.length / 10)
+            return {
+                ...state,
+                pageCount: setPageCount
+            }
+
+        case actionTypes.CHANGE_PAGE:
+            return {
+                ...state,
+                currentPage: action.page
+            }
+
         default:
             return {
                 ...state,

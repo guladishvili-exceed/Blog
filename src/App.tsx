@@ -7,13 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import LogIn from './components/LogIn/Login';
 import Register from './components/Register/Register';
-import Homepage from './pages/HomePage/HomePage';
+import Homepage from './components/HomePage/HomePage';
 import Profile from './components/Profile/Profile';
 import Posts from './components/addPostUI/Posts';
 import PostOnPage from './components/PostOnPage/PostOnPage';
 import reducer from './Redux/rootReducer';
 
 import './app.css';
+import AdminPanel from "./components/AdminPanel/AdminPanel";
 
 // @ts-ignore
 export const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
@@ -48,6 +49,10 @@ const routes = [
     path: '/postsOnPage/:postId',
     component: PostOnPage,
   },
+  {
+    path : '/adminPanel',
+    component : AdminPanel
+  }
 ];
 
 const App: React.FunctionComponent = () => {

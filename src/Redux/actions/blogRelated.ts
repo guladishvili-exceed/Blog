@@ -58,3 +58,16 @@ export const getUser = (singleUser: Object) => {
     singleUser,
   }
 }
+
+export const setPageCount = () => {
+  return {
+    type:actionTypes.PAGE_COUNT
+  }
+}
+
+export const changePage = (page : any) => {
+  return {
+    type:actionTypes.CHANGE_PAGE,
+    page
+  }
+}

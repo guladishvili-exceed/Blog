@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {  useRouteMatch } from "react-router";
+import {v4 as uuidv4} from 'uuid'
 
 import { useDispatch, connect, useSelector } from "react-redux";
 import * as actions from "../../Redux/actions/blogRelated";
@@ -18,7 +19,13 @@ const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
   const username = localStorage.getItem("username");
 
   const topic: any = useSelector((state: any) => state.topic)
-  
+  let users : any = useSelector((state : any) => state.users)
+
+  let filterUsers = users.filter((user : any) => user.username === username)
+  console.log('--------filterUsers', filterUsers);
+  console.log('--------users', users);
+
+
   //Checks if token is presented
   useEffect(() : void => {
     reusableFunction.checkIfTokenIsPresented()
@@ -49,14 +56,28 @@ const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
     getCurrentTopicDataFromBE()
   }, [])
 
+  //Get All Users
+  useEffect(() : void => {
+    axios
+      .get("http://localhost:4000/getUsers")
+      .then((res) => {
+        dispatch(actions.getUsers(res.data));
+        console.log("--------res", res.data);
+      })
+      .catch((err) => {
+        console.log("--------err", err);
+      });
+  }, []);
+
+
+
 
   const checkPostAuthor = () : any => {
-    if (username === topic.username || username === "admin") {
-      return true
-    } else {
-      return false
-    }
+    return filterUsers.map((user : any) => {
+      return username === topic.username || user.role === 'admin' || user.role === 'super admin';
+    })
   };
+
 
 
   return (

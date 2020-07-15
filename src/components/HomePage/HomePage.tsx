@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import {  useRouteMatch } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 
 import * as actions from "../../Redux/actions/blogRelated";
@@ -22,6 +21,11 @@ const HomePage: React.FC = () => {
 
   let posts: any = useSelector((state: any) => state.posts);
   let users : any = useSelector((state : any) => state.users)
+  let pageCount = useSelector((state:any) => state.pageCount)
+  console.log('--------pageCount', pageCount);
+
+
+  let username = localStorage.getItem("username")
   toast.configure();
 
   //Checks if token is presented
@@ -56,12 +60,29 @@ const HomePage: React.FC = () => {
       });
   }, []);
 
+  const renderPagination = () => {
+    const paging = []
+    for (let i = 1; i <= pageCount; i++) {
+      paging.push(
+        <button
+          key={uuidv4()}
+          className={'btn btn-info'}
+          onClick={() => {
+            actions.changePage(i)
+          }}>
+          {i}
+        </button>
+      )
+    }
+    return paging
+  }
+
 
   const getPostById = (id: Number) : void => {
     axios
       .get(`http://localhost:4000/getTopic/${id}`)
       .then((post) => {
-        console.log('--------post.data', post.data.title);
+        console.log('--------post', post);
       })
       .catch((err) => {
         console.log('--------err', err);
@@ -69,8 +90,13 @@ const HomePage: React.FC = () => {
   }
 
   //Filtering users to find which user is currently logged in
-  const user = users.filter((user : any) => user.username === localStorage.getItem('username'))
+  const user = users.filter((user : any) => user.role === "admin")
+  const superUser = users.filter((user:any)=>user.role === "super admin")
+  const currentUser = superUser.filter((user : any) => user.username === username)
+  console.log('--------superUser', superUser);
 
+  
+  
 
 
 
@@ -83,8 +109,21 @@ const HomePage: React.FC = () => {
   return (
     <div className="card">
       <div className="navbar">
-        {user.map((user : any) => {
-        return  <Link key={uuidv4()} to={`/profile/${user.id}`}><button key={uuidv4()}>My Profile</button></Link>
+        {superUser.map((user : any) => {
+          if (user.username === username) {
+            return  <div key={uuidv4()}>
+              <Link key={uuidv4()} to={`/profile/${user.id}`}>
+                <button key={uuidv4()}>My Profile</button>
+              </Link>
+              <button onClick={() => {history.push('/adminPanel')}}>Admin Panel</button>
+            </div>
+          } else {
+            return  <div key={uuidv4()}>
+              <Link key={uuidv4()} to={`/profile/${user.id}`}>
+                <button key={uuidv4()}>My Profile</button>
+              </Link>
+            </div>
+          }
         })}
         <button onClick={() => history.push("/posts")}>New Topic</button>
         <button onClick={() => LogOut()}>Log Out</button>
@@ -107,6 +146,7 @@ const HomePage: React.FC = () => {
             })}
         </ul>
       </div>
+      {renderPagination()}
     </div>
   );
 };

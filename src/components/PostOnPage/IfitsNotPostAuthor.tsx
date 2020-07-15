@@ -11,7 +11,7 @@ import * as reusableFunction from "../reusable functions/reusablefunctions";
 import Comments from "../CurrentPageComments/Comments";
 
 
-const IfitsNotPostAuthor: React.FunctionComponent<any> = ({comments}) => {
+const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
 
   const history = useHistory();
   const match: any = useRouteMatch();
@@ -19,6 +19,8 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = ({comments}) => {
 
 
   const topic: any = useSelector((state: any) => state.topic)
+  const comments : any = useSelector((state : any) => state.comments)
+
 
   const username = localStorage.getItem("username")
   let commentRef = React.useRef<HTMLInputElement>(null);
@@ -147,11 +149,6 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = ({comments}) => {
   )
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    comments: state.comments,
-    topic: state.topic
-  };
-};
 
-export default connect(mapStateToProps)(IfitsNotPostAuthor);
+
+export default IfitsNotPostAuthor;

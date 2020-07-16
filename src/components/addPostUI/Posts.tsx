@@ -3,7 +3,7 @@ import {useHistory} from 'react-router-dom'
 import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './style.css'
+import './posts.css'
 import { useDispatch, useSelector} from 'react-redux'
 import * as actions from '../../Redux/actions/blogRelated'
 import * as reusableFunction from "../reusable functions/reusablefunctions";

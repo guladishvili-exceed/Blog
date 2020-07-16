@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid'
 import { useDispatch, connect, useSelector } from "react-redux";
 import * as actions from "../../Redux/actions/blogRelated";
 
-import "./style.css";
+import "./postOnPage.css";
 import axios from "axios";
 import * as reusableFunction from '../../components/reusable functions/reusablefunctions'
 

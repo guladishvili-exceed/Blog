@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import './style.css'
+import './profile.css'
 import picture from './profile.jpg'
 import axios from "axios";
 import * as reusableFunction from "../reusable functions/reusablefunctions";

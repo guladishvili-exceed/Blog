@@ -1,0 +1,92 @@
+.home-page {
+
+    margin : 200px  auto;
+    background-color: white;
+    border : 2px solid white;
+    padding: 20px;
+    height: auto;
+    border-radius: 2%;
+    width : 90% !important;;
+    text-align: center;
+    justify-content: space-around;
+}
+
+.topside {
+    float:left;
+    overflow: hidden;
+    top: 0;
+    width: 100%;
+}
+
+.navBar  {
+    margin-left: 30px;
+
+}
+
+.bootstrapNewTopic,.bootstrapProfile,.bootstrapAdmin,.bootstrapLogOut {
+    background: cadetblue;
+    color:white;
+    margin-left : 15px;
+    margin-bottom : 15px;
+}
+
+.bootstrapProfile a {
+    color : white !important;
+}
+
+.link {
+    color : white;
+}
+
+.link:visited {
+    color: white;
+}
+
+label {
+    margin-top: 50px;
+}
+
+
+
+ul {
+    list-style-type: none;
+    text-align: center;
+}
+li {
+    width: 40%;
+    margin-left: 465px;
+    border-bottom: 2px solid black;
+
+}
+
+
+
+a {
+    color: cadetblue;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+a:active {
+    color: white;
+}
+
+a:visited {
+    color: cadetblue;
+}
+
+.poster1 {
+    float:right;
+}
+
+.poster2 {
+    float:left;
+}
+
+.poster1,.poster1 {
+    display: inline;
+}
+
+  

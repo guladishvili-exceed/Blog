@@ -3,7 +3,7 @@ import { Link, withRouter, useHistory } from "react-router-dom";
 import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./style.css";
+import "./register.css";
 
 const Register : React.FunctionComponent  = () => {
 
@@ -57,35 +57,44 @@ const Register : React.FunctionComponent  = () => {
 
 
   return (
-    <div className="container">
+    <div className="register-container">
       <h1 className={"registerH1"}>Registration</h1>
-      <div className="email">
+      <div className="registration-username">
+        <label className={'label-name'}>
+          <span className={'content-name'}>Username</span>
+        </label>
         <input
           ref={emailEl}
           type={"text"}
-          placeholder={"Enter your username"}
+          placeholder={"..."}
           onKeyPress = {handleKeyPress}
         />
       </div>
-      <div className="password">
+      <div className="registration-password">
+        <label className={'label-name'}>
+          <span className={'content-name'}>Password</span>
+        </label>
         <input
           ref={passwordEl}
           type={"password"}
-          placeholder={"Enter your password"}
+          placeholder={"..."}
           onKeyPress = {handleKeyPress}
         />
       </div>
-      <div className="confirmPassword">
+      <div className="registration-confirmPassword">
+        <label className={'label-name'}>
+          <span className={'content-name'}>Confirm Password</span>
+        </label>
         <input
           ref={confirmpasswordEl}
           type={"password"}
-          placeholder={"Confirm your password"}
+          placeholder={"..."}
           onKeyPress = {handleKeyPress}
         />
       </div>
-      <div id={"buttons"} className="buttons">
+      <div id={"buttons"} className="registration-buttons">
         <Link to={"/login"}>
-          <button>Log In</button>
+          <button id={'register-login-button'}>Log In</button>
         </Link>
         <button onClick={() => registerUser()}>Register</button>
       </div>

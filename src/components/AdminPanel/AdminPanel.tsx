@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import './style.css'
+import './admin.css'
 import * as reusableFunction from "../reusable functions/reusablefunctions";
 import * as actions from "../../Redux/actions/blogRelated";
 

@@ -2,6 +2,11 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Jumbotron from 'react-bootstrap/Jumbotron'
+import Container from 'react-bootstrap/Container'
+import {Navbar,Nav,Form,Button,FormControl} from "react-bootstrap";
+
+
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +14,9 @@ import { v4 as uuidv4 } from "uuid";
 
 import * as actions from "../../Redux/actions/blogRelated";
 import "react-toastify/dist/ReactToastify.css";
-import "./style.css";
+import "./homepage.css";
+import poster1 from "./poster1.jpg"
+import poster2 from "./poster2.jpg"
 
 import * as reusableFunction from '../../components/reusable functions/reusablefunctions'
 
@@ -92,11 +99,10 @@ const HomePage: React.FC = () => {
   //Filtering users to find which user is currently logged in
   const user = users.filter((user : any) => user.role === "admin")
   const superUser = users.filter((user:any)=>user.role === "super admin")
-  const currentUser = superUser.filter((user : any) => user.username === username)
   console.log('--------superUser', superUser);
 
-  
-  
+
+
 
 
 
@@ -106,29 +112,52 @@ const HomePage: React.FC = () => {
   };
 
 
+
+
   return (
-    <div className="card">
-      <div className="navbar">
+    <div className="home-page">
+      <Jumbotron fluid>
+        <Container>
+          <h1>Welcome to Roffy's Forum User {localStorage.getItem('username')}</h1>
+          <label>
+            Place where you can discuss everything
+          </label>
+        </Container>
+      </Jumbotron>
+      <div className="topside">
         {superUser.map((user : any) => {
           if (user.username === username) {
-            return  <div key={uuidv4()}>
-              <Link key={uuidv4()} to={`/profile/${user.id}`}>
-                <button key={uuidv4()}>My Profile</button>
-              </Link>
-              <button onClick={() => {history.push('/adminPanel')}}>Admin Panel</button>
+            return  <div className={'case-buttons'} key={uuidv4()}>
+              <Navbar bg="dark" className={'navBar'} variant="dark">
+                <Nav className="mr-auto">
+                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link className={'link'} key={uuidv4()} to={`/profile/${user.id}`}>My Profile</Link> </Button>
+                  <Button className={'bootstrapAdmin'} variant="outline-info" onClick={() => {history.push('/adminPanel')}}>Admin Panel</Button>
+                  <Button className={'bootstrapNewTopic'} variant="outline-info" onClick={() => {history.push('/posts')}}>New Topic</Button>
+                </Nav>
+                <Button className={'bootstrapLogOut'}  variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
+              </Navbar>
+              <div className={'poster1'}>
+                <img src={poster1} />
+              </div>
+              <div className={'poster2'}>
+                <img src={poster2} />
+              </div>
             </div>
           } else {
-            return  <div key={uuidv4()}>
-              <Link key={uuidv4()} to={`/profile/${user.id}`}>
-                <button key={uuidv4()}>My Profile</button>
-              </Link>
+            return  <div className={'homepage-buttons'} key={uuidv4()}>
+              <Navbar bg="dark" variant="dark">
+                <Nav className="mr-auto">
+                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link key={uuidv4()} to={`/profile/${user.id}`}>My Profile</Link> </Button>
+                  <Button className={'bootstrapNewTopic'} variant="outline-info" onClick={() => {history.push('/posts')}}>New Topic</Button>
+                </Nav>
+                <Button variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
+              </Navbar>
             </div>
           }
         })}
-        <button onClick={() => history.push("/posts")}>New Topic</button>
-        <button onClick={() => LogOut()}>Log Out</button>
       </div>
       <div id="posts">
+        <h1>Posts</h1>
         <ul>
           {
             Array.isArray(posts) &&

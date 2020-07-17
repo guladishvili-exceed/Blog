@@ -8,14 +8,12 @@
     border-radius: 2%;
     width : 90% !important;;
     text-align: center;
-    justify-content: space-around;
 }
 
 .topside {
-    float:left;
-    overflow: hidden;
-    top: 0;
+    overflow: auto;
     width: 100%;
+    clear:both;
 }
 
 .navBar  {
@@ -54,11 +52,15 @@ ul {
 }
 li {
     width: 40%;
-    margin-left: 465px;
+    margin-left: 455px;
+    margin-top : 100px !important;
     border-bottom: 2px solid black;
 
 }
 
+.render {
+    margin-right: 150px;
+}
 
 
 a {
@@ -85,8 +87,43 @@ a:visited {
     float:left;
 }
 
-.poster1,.poster1 {
-    display: inline;
+.poster3 {
+    margin: 90px 0 0 83%;
 }
 
-  
+.poster4 {
+    position: absolute;
+    margin-top: 100px ;
+    left: 100px;
+}
+
+.poster1,.poster2, .poster3, .poster4 {
+    display: inline;
+    border-radius: 0;
+}
+
+
+nav {
+    position:absolute !important;
+}
+
+#posts {
+    position: absolute;
+    top: 600px;
+    bottom: 0;
+    left: 100px;
+    right: 0;
+    display: block;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#postsH1 {
+    margin-right:100px;
+}
+
+img {
+    height: 400px;
+    border: 3px solid cadetblue;
+
+}

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Jumbotron from 'react-bootstrap/Jumbotron'
 import Container from 'react-bootstrap/Container'
-import {Navbar,Nav,Form,Button,FormControl} from "react-bootstrap";
+import {Navbar,Nav,Button,Row} from "react-bootstrap";
 
 
 
@@ -17,6 +17,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "./homepage.css";
 import poster1 from "./poster1.jpg"
 import poster2 from "./poster2.jpg"
+import poster3 from "./street.jpg"
+import poster4 from "./poster4.jpg"
+
 
 import * as reusableFunction from '../../components/reusable functions/reusablefunctions'
 
@@ -73,7 +76,7 @@ const HomePage: React.FC = () => {
       paging.push(
         <button
           key={uuidv4()}
-          className={'btn btn-info'}
+          className={'render'}
           onClick={() => {
             actions.changePage(i)
           }}>
@@ -97,13 +100,23 @@ const HomePage: React.FC = () => {
   }
 
   //Filtering users to find which user is currently logged in
-  const user = users.filter((user : any) => user.role === "admin")
   const superUser = users.filter((user:any)=>user.role === "super admin")
-  console.log('--------superUser', superUser);
+  const currentUser = users.filter((user : any) => user.username === username)
+  console.log('--------currentUser', currentUser);
 
 
+ const grabCurrentUserId = () : number  => {
+   return currentUser.map((user : any) => {
+     return user.id
+   })
+ }
+console.log('--------grabCurrentUserId()', grabCurrentUserId());
 
-
+  const grabCurrentUserUsername = () : string => {
+    return currentUser.map((user : any) => {
+      return user.username
+    })
+  }
 
 
   const LogOut = () : void  => {
@@ -115,10 +128,10 @@ const HomePage: React.FC = () => {
 
 
   return (
-    <div className="home-page">
+    <div className="home-page flex-box-container">
       <Jumbotron fluid>
         <Container>
-          <h1>Welcome to Roffy's Forum User {localStorage.getItem('username')}</h1>
+          <h1>Welcome Back to Roffy's Forum User {localStorage.getItem('username')}</h1>
           <label>
             Place where you can discuss everything
           </label>
@@ -130,35 +143,39 @@ const HomePage: React.FC = () => {
             return  <div className={'case-buttons'} key={uuidv4()}>
               <Navbar bg="dark" className={'navBar'} variant="dark">
                 <Nav className="mr-auto">
-                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link className={'link'} key={uuidv4()} to={`/profile/${user.id}`}>My Profile</Link> </Button>
+                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link className={'link'} key={uuidv4()} to={`/profile/${user.id}/${user.username}`}>My Profile</Link> </Button>
                   <Button className={'bootstrapAdmin'} variant="outline-info" onClick={() => {history.push('/adminPanel')}}>Admin Panel</Button>
                   <Button className={'bootstrapNewTopic'} variant="outline-info" onClick={() => {history.push('/posts')}}>New Topic</Button>
                 </Nav>
                 <Button className={'bootstrapLogOut'}  variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
               </Navbar>
-              <div className={'poster1'}>
-                <img src={poster1} />
-              </div>
-              <div className={'poster2'}>
-                <img src={poster2} />
-              </div>
+                <img  className={'poster1'} src={poster1} />
+                <img className={'poster2'} src={poster2} />
+                <img className={'poster3'} src={poster3} />
+               <img className={'poster4'} src={poster4} />
+
             </div>
           } else {
-            return  <div className={'homepage-buttons'} key={uuidv4()}>
-              <Navbar bg="dark" variant="dark">
+            return  <div className={'case-buttons'} key={uuidv4()}>
+              <Navbar bg="dark" className={'navBar'} variant="dark">
                 <Nav className="mr-auto">
-                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link key={uuidv4()} to={`/profile/${user.id}`}>My Profile</Link> </Button>
+                  <Button className = {'bootstrapProfile'} variant="outline-info"><Link className={'link'} key={uuidv4()} to={`/profile/${grabCurrentUserId()}/${grabCurrentUserUsername()}`}>My Profile</Link> </Button>
                   <Button className={'bootstrapNewTopic'} variant="outline-info" onClick={() => {history.push('/posts')}}>New Topic</Button>
                 </Nav>
-                <Button variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
+                <Button className={'bootstrapLogOut'}  variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
               </Navbar>
+              <img  className={'poster1'} src={poster1} />
+              <img className={'poster2'} src={poster2} />
+              <img className={'poster3'} src={poster3} />
+              <img className={'poster4'} src={poster4} />
+
             </div>
           }
         })}
       </div>
-      <div id="posts">
-        <h1>Posts</h1>
-        <ul>
+      <div  id="posts">
+        <h1  id={'postsH1'}>Posts</h1>
+        <ul  id={'ul'}>
           {
             Array.isArray(posts) &&
             posts.map((post: any) => {
@@ -171,11 +188,11 @@ const HomePage: React.FC = () => {
                 >
                   <Link to={`/postsOnPage/${post.id}`}>{post.title}</Link>
                 </li>
-              );
+            );
             })}
+          {renderPagination()}
         </ul>
       </div>
-      {renderPagination()}
     </div>
   );
 };

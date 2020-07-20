@@ -1,16 +1,30 @@
-ul {
-    list-style-type: none;
-}
-
-li {
-    color: cadetblue;
-    text-decoration: none !important;
-    text-transform: uppercase;
-    font-weight: bolder;
-    font-size: 20px;
-    margin-top:30px;
-}
-
-.card {
+.adminbody {
+    margin: 200px auto;
+    background-color: white;
+    border: 2px solid white;
     height: auto;
+    border-radius: 2%;
+    width: 50% !important;;
+    text-align: center;
+    overflow: hidden !important;
 }
+
+.adminbody img {
+
+    height : 50px;
+    border: none;
+}
+
+.home {
+    background: transparent;
+    float: left;
+}
+
+.home:hover {
+    box-shadow: 0 0 0;
+}
+
+/*ul {*/
+/*    display: inline-block;*/
+/*    list-style-position: inside*/
+/*}*/

@@ -32,7 +32,13 @@ const HomePage: React.FC = () => {
   let posts: any = useSelector((state: any) => state.posts);
   let users : any = useSelector((state : any) => state.users)
   let pageCount = useSelector((state:any) => state.pageCount)
-  console.log('--------pageCount', pageCount);
+  let currentPage = useSelector((state : any) => state.currentPage)
+  let itemsPerPage = useSelector((state : any) => state.itemsPerPage)
+  
+  const indexOfLasttItem = currentPage * itemsPerPage
+  const indexOfFirstItem = (indexOfLasttItem - itemsPerPage)
+  const currentPosts = posts.slice(indexOfFirstItem, indexOfLasttItem)
+
 
 
   let username = localStorage.getItem("username")
@@ -49,7 +55,9 @@ const HomePage: React.FC = () => {
       .get("http://localhost:4000/getPost")
       .then((res) => {
         dispatch(actions.getPost(res.data));
+        dispatch(actions.setPageCount())
         console.log("--------res", res.data);
+        console.log('--------currentPosts', currentPosts);
       })
       .catch((err) => {
         console.log("--------err", err);
@@ -76,9 +84,9 @@ const HomePage: React.FC = () => {
       paging.push(
         <button
           key={uuidv4()}
-          className={'render'}
+          className={'container1'}
           onClick={() => {
-            actions.changePage(i)
+            dispatch(actions.changePage(i))
           }}>
           {i}
         </button>
@@ -102,7 +110,6 @@ const HomePage: React.FC = () => {
   //Filtering users to find which user is currently logged in
   const superUser = users.filter((user:any)=>user.role === "super admin")
   const currentUser = users.filter((user : any) => user.username === username)
-  console.log('--------currentUser', currentUser);
 
 
  const grabCurrentUserId = () : number  => {
@@ -110,7 +117,6 @@ const HomePage: React.FC = () => {
      return user.id
    })
  }
-console.log('--------grabCurrentUserId()', grabCurrentUserId());
 
   const grabCurrentUserUsername = () : string => {
     return currentUser.map((user : any) => {
@@ -177,8 +183,8 @@ console.log('--------grabCurrentUserId()', grabCurrentUserId());
         <h1  id={'postsH1'}>Posts</h1>
         <ul  id={'ul'}>
           {
-            Array.isArray(posts) &&
-            posts.map((post: any) => {
+            Array.isArray(currentPosts) &&
+            currentPosts.map((post: any) => {
               return (
                 <li
                   key={uuidv4()}

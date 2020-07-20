@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {  useRouteMatch } from "react-router";
-import {v4 as uuidv4} from 'uuid'
 
 import { useDispatch, connect, useSelector } from "react-redux";
 import * as actions from "../../Redux/actions/blogRelated";
@@ -22,8 +21,7 @@ const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
   let users : any = useSelector((state : any) => state.users)
 
   let filterUsers = users.filter((user : any) => user.username === username)
-  console.log('--------filterUsers', filterUsers);
-  console.log('--------users', users);
+console.log('--------filterUsers', filterUsers);
 
 
   //Checks if token is presented
@@ -70,15 +68,11 @@ const PostOnPage: React.FunctionComponent<any> = ({comments}) => {
   }, []);
 
 
-
-
   const checkPostAuthor = () : any => {
-    return filterUsers.map((user : any) => {
+    return filterUsers.some((user : any) => {
       return username === topic.username || user.role === 'admin' || user.role === 'super admin';
     })
   };
-
-
 
   return (
      checkPostAuthor() ? (

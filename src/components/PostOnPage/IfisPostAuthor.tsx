@@ -1,22 +1,42 @@
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from "react-router";
-import { useDispatch, connect, useSelector } from "react-redux";
-import axios from "axios";
-import * as actions from "../../Redux/actions/blogRelated";
+import { useDispatch, useSelector } from "react-redux";
+
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import * as actions from "../../Redux/actions/blogRelated";
 import * as reusableFunction from "../reusable functions/reusablefunctions";
+
+import deleteIcon from './delete.png'
+import accept from './accept.png'
+import home from './home.png'
+import cancelIcon from './cancel.png'
+import editPost from './editPost.svg'
+import './ifIsPostAuthor.css'
+
 import Comments from "../CurrentPageComments/Comments";
 
 const IfisPostAuthor: React.FunctionComponent<any> = () => {
+
   let commentRef = React.useRef<HTMLInputElement>(null);
+  let titleRef = React.useRef<HTMLInputElement>(null)
   let descriptionRef = React.useRef<HTMLTextAreaElement>(null);
 
   const [editMode, editModeSwitch] = React.useState<boolean>(false);
 
   const topic: any = useSelector((state: any) => state.topic)
   const comments : any = useSelector((state : any) => state.comments)
+  let pageCount = useSelector((state:any) => state.pageCount)
+  let currentPage = useSelector((state : any) => state.currentPage)
+  let itemsPerPage = useSelector((state : any) => state.itemsPerPage)
+
+  const indexOfLasttItem = currentPage * itemsPerPage
+  const indexOfFirstItem = (indexOfLasttItem - itemsPerPage)
+  const currentComments = comments.slice(indexOfFirstItem, indexOfLasttItem)
 
   const match : any = useRouteMatch();
   const dispatch = useDispatch();
@@ -33,17 +53,30 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
       axios.get(`http://localhost:4000/getTopic/${match.params.postId}`)
         .then((res) => {
           dispatch(actions.getTopic({...res.data}));
+          dispatch(actions.setCommentCount())
           console.log('--------res', res.data);
         })
     }
     getCurrentTopicDataFromBE()
   }, [])
 
+  const renderPagination = () => {
+    const paging = []
+    for (let i = 1; i <= pageCount; i++) {
+      paging.push(
+        <button
+          key={uuidv4()}
+          className={'container1'}
+          onClick={() => {
+            dispatch(actions.changePage(i))
+          }}>
+          {i}
+        </button>
+      )
+    }
+    return paging
+  }
 
-  const LogOut = () : void  => {
-    localStorage.clear();
-    history.push("/login");
-  };
 
   const grabUsernameFromReduxStoreTopic  = () : string => {
     return topic.username
@@ -90,16 +123,15 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
 
   const submitPostEdit = (id: Number) : void => {
     let descriptionValue = descriptionRef.current;
-      if (descriptionValue) {
+    let titleValue = titleRef.current
+      if (descriptionValue && titleValue) {
         axios
           .put(`http://localhost:4000/updateTopic/${id}`, {
             description: descriptionValue.value,
+            title : titleValue.value
           })
           .then((post) => {
-            console.log("--------post", post);
-            if (descriptionValue) {
-              topic.description = descriptionValue.value;
-            }
+            window.location.reload(false);
             editModeSwitch(false);
           })
           .catch((err) => {
@@ -128,10 +160,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
             username: localStorage.getItem("username"),
           })
           .then((res) => {
-            if (commentValue) {
               getAllCommentsOnCurrentPostFromBE(match.params.postId);
-            }
-            console.log("--------comment", res.data);
           })
           .catch((err) => {
             toast.info("Server error");
@@ -147,8 +176,8 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
     axios
       .get(`http://localhost:4000/getComment/${id}`)
       .then((res) => {
-        console.log("--------res,get", res.data);
         dispatch(actions.getComment(res.data));
+        dispatch(actions.setCommentCount())
       })
       .catch((err) => {
         console.log("--------err", err);
@@ -156,20 +185,18 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
   };
 
   return editMode ? (
-    <div id="card" className="card">
-      <div id="postButtons" className="buttons">
-        <button onClick={() => history.push("/homepage")}>Home</button>
-        <button onClick={() => history.push("/profile")}>My Profile</button>
-        <button onClick={() => LogOut()}>Log Out</button>
+    <div  className="postBody">
+      <div className="postBtn">
+        <button onClick={() => history.push("/homepage")}><img src={home} /></button>
       </div>
       <div className="posts">
-        <p>Title :{grabTitleFromReduxStoreTopic()}</p>
+        <p>Title : <input ref={titleRef} defaultValue={grabTitleFromReduxStoreTopic()}/></p>
 
         <p>
           <textarea
             ref={descriptionRef}
             defaultValue={grabDescriptionFromReduxStoreTopic()}
-            placeholder={"Enter Text"}
+            placeholder={"Enter Description"}
           />
         </p>
         <button
@@ -177,22 +204,21 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
             cancelEdit();
           }}
         >
-          Cancel Edit
+          <img src={cancelIcon}/>
         </button>
         <button
           onClick={() => {
             submitPostEdit(grabIdFromReduxStoreTopic());
           }}
         >
-          Submit Edit
+          <img src={accept}/>
         </button>
       </div>
     </div>
   ) : (
-    <div id="card" className="card">
-      <div id="postButtons" className="buttons">
-        <button onClick={() => history.push("/homepage")}>Home</button>
-        <button onClick={() => LogOut()}>Log Out</button>
+    <div  className="postBody">
+      <div className="postBtn">
+        <button onClick={() => history.push("/homepage")}><img src={home} /></button>
       </div>
 
       <div className="posts">
@@ -203,13 +229,13 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
         <p>Description :{grabDescriptionFromReduxStoreTopic ()}</p>
 
         <div>
-          <button onClick={() => editModeSwitch(true)}>Edit Post</button>
-          <button onClick={() => {deleteCommentsWhenPostIsDeleted(grabIdFromReduxStoreTopic())}}>Delete Post</button>
+          <button onClick={() => editModeSwitch(true)}><img src={editPost} /></button>
+          <button onClick={() => {deleteCommentsWhenPostIsDeleted(grabIdFromReduxStoreTopic())}}><img src={deleteIcon}/></button>
         </div>
 
         <div>
           <ul>
-            {comments.map((comment: any) => {
+            {currentComments.map((comment: any) => {
               if (comment.username === username) {
                 return (
                   <Comments
@@ -221,7 +247,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
                 return <p key={uuidv4()}>Comment : {comment.comment}</p>
               }
             })}
-
+            {renderPagination()}
           </ul>
         </div>
 
@@ -232,7 +258,7 @@ const IfisPostAuthor: React.FunctionComponent<any> = () => {
               addComment(match.params.postId);
             }}
           >
-            Add Comment
+            <img src={accept} />
           </button>
         </div>
       </div>

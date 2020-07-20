@@ -1,9 +1,13 @@
 import React from 'react'
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios'
+
 import { useDispatch} from "react-redux";
 import * as actions from "../../Redux/actions/blogRelated";
 
+import deleteIcon from './delete.png'
+import editIcon from './edit.png'
+import accept from './accept.png'
 
 
 const Comments : React.FunctionComponent<any> = ({comment,topicid}) => {
@@ -21,6 +25,7 @@ const Comments : React.FunctionComponent<any> = ({comment,topicid}) => {
       .then((res) => {
         console.log("--------res,get", res.data);
         dispatch(actions.getComment(res.data));
+        dispatch(actions.setCommentCount())
       })
       .catch((err) => {
         console.log("--------err", err);
@@ -64,8 +69,8 @@ const Comments : React.FunctionComponent<any> = ({comment,topicid}) => {
   return commentMode ? (
     <div>
       <input ref={editModeCommentRef} defaultValue={comment.comment} />
-      <button onClick={() => {cancelCommentEdit()}}>Cancel edit</button>
-      <button onClick={() => {submitCommentEdit(comment.commentid)}}>Submit edit</button>
+      <button onClick={() => {cancelCommentEdit()}}><img src={deleteIcon} /></button>
+      <button onClick={() => {submitCommentEdit(comment.commentid)}}><img src={accept} /></button>
     </div>
 
   ) : (
@@ -73,10 +78,10 @@ const Comments : React.FunctionComponent<any> = ({comment,topicid}) => {
       <ul>
               <div key={uuidv4()}>
                 <label>{comment.comment}</label>
-                <button onClick={() => commentEditModeSwitch(!commentMode)}>Edit</button>
+                <button onClick={() => commentEditModeSwitch(!commentMode)}><img src={editIcon} /></button>
                 <button onClick={() => {
                   deleteComment(comment.commentid)
-                }}>Delete
+                }}> <img src={deleteIcon} />
                 </button>
               </div>
       </ul>

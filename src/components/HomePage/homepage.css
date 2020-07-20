@@ -127,3 +127,10 @@ img {
     border: 3px solid cadetblue;
 
 }
+
+.container1 {
+    height: 50px;
+    padding: 10px 15px;
+    width: 5%;
+    margin-right: 120px !important;
+}

@@ -1,9 +1,16 @@
 import React from 'react'
 import { v4 as uuidv4 } from "uuid";
 import axios from 'axios'
+
 import { useDispatch } from "react-redux";
+
 import * as actions from "../../Redux/actions/blogRelated";
 import { toast } from "react-toastify";
+
+import './userlist.css'
+import deleteIcon from './delete.png'
+import editIcon from './edit.png'
+import accept from './accept.png'
 
 const UserList: React.FunctionComponent<any> = ({users}) => {
 
@@ -63,29 +70,29 @@ const UserList: React.FunctionComponent<any> = ({users}) => {
   }
 
   return editMode ? (
-    <div key={uuidv4()}>
-      <li>{users.username}
-        <button onClick={() => {
-          deleteUser(users.id)
-        }}>Delete
-        </button>
-      </li>
-      <input ref={inputRef} placeholder={'Enter new role...'}/>
-      <button onClick={() => {changeUserRole(users.id)}}>Submit edit</button>
-      <button onClick={() => {cancelEdit()}}>Cancel edit</button>
-    </div>
-  ) : (
-    <div key={uuidv4()}>
+    <div className = {'userList'} key={uuidv4()}>
       <li>User Id : {users.id}
         <button onClick={() => {
           deleteUser(users.id)
-        }}>Delete
+        }}><img src={deleteIcon} />
+        </button>
+      </li>
+      <input ref={inputRef} placeholder={'Enter new role...'}/>
+      <button onClick={() => {changeUserRole(users.id)}}><img src={accept} /></button>
+      <button onClick={() => {cancelEdit()}}><img src={deleteIcon} /></button>
+    </div>
+  ) : (
+    <div className = {'userList'} key={uuidv4()}>
+      <li>User Id : {users.id}
+        <button onClick={() => {
+          deleteUser(users.id)
+        }}><img src={deleteIcon} />
         </button>
       </li>
       <p>Role : {users.role}
         <button onClick={() => {
           switchEditMode(!editMode)
-        }}>Edit Role
+        }}><img src={editIcon}/>
         </button>
       </p>
     </div>

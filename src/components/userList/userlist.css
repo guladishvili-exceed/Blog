@@ -1,0 +1,25 @@
+.userList img {
+    height : 30px !important;
+    border: none;
+}
+
+
+.userList li {
+    margin:0 auto;
+    border-bottom:none;
+}
+
+
+.userList p {
+    border-bottom: 2px solid black;
+    margin:0 auto;
+    width: 50%;
+}
+
+.userList button {
+    background: transparent;
+}
+
+.userList button:hover {
+ box-shadow: 0 0 0;
+}

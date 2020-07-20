@@ -9,5 +9,6 @@ export const actionTypes = {
     GET_USERS : "GET_USERS",
     GET_USER : "GET_USER",
     PAGE_COUNT : "PAGE_COUNT",
+    COMMENT_COUNT : "COMMENT_COUNT",
     CHANGE_PAGE:"PAGE_CHANGE",
 }

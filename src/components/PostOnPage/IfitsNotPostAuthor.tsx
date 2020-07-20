@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from "react-router";
-import { useDispatch, connect, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -9,6 +9,10 @@ import * as actions from "../../Redux/actions/blogRelated";
 import { v4 as uuidv4 } from "uuid";
 import * as reusableFunction from "../reusable functions/reusablefunctions";
 import Comments from "../CurrentPageComments/Comments";
+
+import accept from './accept.png'
+import home from './home.png'
+import './ifItsNotPostAuthor.css'
 
 
 const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
@@ -19,7 +23,14 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
 
 
   const topic: any = useSelector((state: any) => state.topic)
-  const comments : any = useSelector((state : any) => state.comments)
+  const comments: any = useSelector((state: any) => state.comments)
+  let pageCount = useSelector((state:any) => state.pageCount)
+  let currentPage = useSelector((state : any) => state.currentPage)
+  let itemsPerPage = useSelector((state : any) => state.itemsPerPage)
+
+  const indexOfLasttItem = currentPage * itemsPerPage
+  const indexOfFirstItem = (indexOfLasttItem - itemsPerPage)
+  const currentComments = comments.slice(indexOfFirstItem, indexOfLasttItem)
 
 
   const username = localStorage.getItem("username")
@@ -40,10 +51,23 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
     getCurrentTopicDataFromBE()
   }, [])
 
-  const LogOut = (): void => {
-    localStorage.clear();
-    history.push("/login");
-  };
+  const renderPagination = () => {
+    const paging = []
+    for (let i = 1; i <= pageCount; i++) {
+      paging.push(
+        <button
+          key={uuidv4()}
+          className={'container1'}
+          onClick={() => {
+            dispatch(actions.changePage(i))
+          }}>
+          {i}
+        </button>
+      )
+    }
+    return paging
+  }
+
 
   const grabUsernameFromReduxStoreTopic = (): string => {
     return topic.username
@@ -68,7 +92,6 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
     axios
       .get(`http://localhost:4000/getComment/${id}`)
       .then((res) => {
-        console.log("--------res,get", res.data);
         dispatch(actions.getComment(res.data));
       })
       .catch((err) => {
@@ -88,10 +111,8 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
             username: localStorage.getItem("username"),
           })
           .then((res) => {
-            if (commentValue) {
               getAllCommentsOnCurrentPostFromBE(grabIdFromReduxStoreTopic());
-            }
-            console.log("--------comment", res.data);
+
           })
           .catch((err) => {
             toast.info("Server error");
@@ -102,14 +123,13 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
   };
 
 
+  return (<div className="postBody1">
 
-  return  (<div id="card" className="card">
-      <div id="postButtons" className="buttons">
-        <button onClick={() => history.push("/homepage")}>Home</button>
-        <button onClick={() => LogOut()}>Log Out</button>
+      <div className="postBtn1">
+        <button onClick={() => history.push("/homepage")}><img src={home}/></button>
       </div>
 
-      <div className="posts">
+      <div className="posts1">
         <p>Author :{grabUsernameFromReduxStoreTopic()}</p>
 
         <p>Title :{grabTitleFromReduxStoreTopic()}</p>
@@ -118,19 +138,19 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
 
         <div>
           <ul>
-            {comments.map((comment: any) => {
+            {currentComments.map((comment: any) => {
               if (comment.username === username) {
                 return (
                   <Comments
-                  key={uuidv4()}
-                  comment = {comment}
-                  topicid = {grabIdFromReduxStoreTopic()}/>
+                    key={uuidv4()}
+                    comment={comment}
+                    topicid={grabIdFromReduxStoreTopic()}/>
                 )
               } else {
-               return <p key={uuidv4()}>Comment : {comment.comment}</p>
+                return <p key={uuidv4()}>Comment : {comment.comment}</p>
               }
             })}
-
+            {renderPagination()}
           </ul>
         </div>
 
@@ -141,14 +161,13 @@ const IfitsNotPostAuthor: React.FunctionComponent<any> = () => {
               addComment(match.params.postId);
             }}
           >
-            Add Comment
+            <img src={accept} />
           </button>
         </div>
       </div>
     </div>
   )
 };
-
 
 
 export default IfitsNotPostAuthor;

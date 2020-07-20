@@ -20,7 +20,7 @@ const initialState: IAppState = {
     singleUser : {},
     currentPage: 1,
     pageCount: 1,
-    itemsPerPage:10,
+    itemsPerPage:4,
 };
 const reducer: Reducer = (state: IAppState = initialState, action: any) => {
     const {posts,comments,topic,singleUser} = state
@@ -94,10 +94,17 @@ const reducer: Reducer = (state: IAppState = initialState, action: any) => {
             }
 
         case actionTypes.PAGE_COUNT:
-            const setPageCount = Math.ceil(posts.length / 10)
+            const setPageCount = Math.ceil(posts.length / 4)
             return {
                 ...state,
                 pageCount: setPageCount
+            }
+
+        case actionTypes.COMMENT_COUNT :
+            const setCommentCount = Math.ceil(comments.length / 4)
+            return {
+                ...state,
+                pageCount: setCommentCount
             }
 
         case actionTypes.CHANGE_PAGE:

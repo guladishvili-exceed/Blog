@@ -1,10 +1,14 @@
 import React, {useEffect, useRef} from 'react'
 import {useHistory} from 'react-router-dom'
+import { useDispatch, useSelector} from 'react-redux'
+
 import axios from 'axios'
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import './posts.css'
-import { useDispatch, useSelector} from 'react-redux'
+import home from './home.png'
+
 import * as actions from '../../Redux/actions/blogRelated'
 import * as reusableFunction from "../reusable functions/reusablefunctions";
 
@@ -57,10 +61,9 @@ const Posts : React.FunctionComponent = () => {
 
     return (
         <div className={'flex-box-container'}>
-            <div className="card">
-                <div className="buttons">
-                    <button onClick={() => {history.push('/homepage')}}>Home</button>
-                    <button onClick={() => {history.push('/login')}}>Log Out</button>
+            <div className="addpost">
+                <div className="homeBtn">
+                    <button onClick={() => {history.push('/homepage')}}><img src={home} /></button>
                 </div>
                 <div className="inputs">
                     <p>Topic Title</p>

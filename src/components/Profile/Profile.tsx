@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
 
 import './profile.css'
+
 import picture from './profile.jpg'
 import icon from './icon.png'
 
@@ -107,7 +108,7 @@ const Profile: React.FunctionComponent = () => {
         <div className={'container-right col-6 '}>
           <p>Username:<input ref={usernameRef} className={'editMode'} defaultValue={user.name}/></p>
           <p>Age :  <input ref={ageRef} className={'editMode'} defaultValue={user.age}/> </p>
-          <p>Gender : {user.gender} <select ref={genderRef} className={'editMode'}>
+          <p>Gender :  <select ref={genderRef} className={'editMode'}>
             <option>Male</option>
             <option>Female</option>
             <option>Other..</option>

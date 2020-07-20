@@ -65,6 +65,12 @@ export const setPageCount = () => {
   }
 }
 
+export const setCommentCount = () => {
+  return {
+    type : actionTypes.COMMENT_COUNT
+  }
+}
+
 export const changePage = (page : any) => {
   return {
     type:actionTypes.CHANGE_PAGE,

@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import Jumbotron from 'react-bootstrap/Jumbotron'
 import Container from 'react-bootstrap/Container'
 import {Navbar,Nav,Button,Row} from "react-bootstrap";
-
-
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,6 +19,16 @@ import poster4 from "./poster4.jpg"
 
 
 import * as reusableFunction from '../../components/reusable functions/reusablefunctions'
+import { Jumbotron } from "react-bootstrap";
+
+interface IUser {
+  id: number;
+  username: string;
+  role: string;
+  password: string;
+  avatar: string
+}
+
 
 const HomePage: React.FC = () => {
 
@@ -30,34 +37,31 @@ const HomePage: React.FC = () => {
 
 
   let posts: any = useSelector((state: any) => state.posts);
-  let users : any = useSelector((state : any) => state.users)
-  let pageCount = useSelector((state:any) => state.pageCount)
-  let currentPage = useSelector((state : any) => state.currentPage)
-  let itemsPerPage = useSelector((state : any) => state.itemsPerPage)
-  
+  let users: any = useSelector((state: any) => state.users)
+  let pageCount = useSelector((state: any) => state.pageCount)
+  let currentPage = useSelector((state: any) => state.currentPage)
+  let itemsPerPage = useSelector((state: any) => state.itemsPerPage)
+
   const indexOfLasttItem = currentPage * itemsPerPage
   const indexOfFirstItem = (indexOfLasttItem - itemsPerPage)
   const currentPosts = posts.slice(indexOfFirstItem, indexOfLasttItem)
-
 
 
   let username = localStorage.getItem("username")
   toast.configure();
 
   //Checks if token is presented
-  useEffect(() : void => {
+  useEffect((): void => {
     reusableFunction.checkIfTokenIsPresented()
   });
 
   //Generates all post from DB on page
-  useEffect(() : void => {
+  useEffect((): void => {
     axios
       .get("http://localhost:4000/getPost")
       .then((res) => {
         dispatch(actions.getPost(res.data));
         dispatch(actions.setPageCount())
-        console.log("--------res", res.data);
-        console.log('--------currentPosts', currentPosts);
       })
       .catch((err) => {
         console.log("--------err", err);
@@ -66,7 +70,7 @@ const HomePage: React.FC = () => {
 
 
   //Generates all users from DB and adds it to the storage Users
-  useEffect(() : void => {
+  useEffect((): void => {
     axios
       .get("http://localhost:4000/getUsers")
       .then((res) => {
@@ -96,7 +100,7 @@ const HomePage: React.FC = () => {
   }
 
 
-  const getPostById = (id: Number) : void => {
+  const getPostById = (id: Number): void => {
     axios
       .get(`http://localhost:4000/getTopic/${id}`)
       .then((post) => {
@@ -108,33 +112,32 @@ const HomePage: React.FC = () => {
   }
 
   //Filtering users to find which user is currently logged in
-  const superUser = users.filter((user:any)=>user.role === "super admin")
-  const currentUser = users.filter((user : any) => user.username === username)
+  const superUser = users.filter((user: any) => user.role === "super admin")
+  console.log('--------superUser,username', superUser, username);
+  const currentUser = users.filter((user: any) => user.username === username)
 
 
- const grabCurrentUserId = () : number  => {
-   return currentUser.map((user : any) => {
-     return user.id
-   })
- }
+  const grabCurrentUserId = (): number => {
+    return currentUser.map((user: any) => {
+      return user.id
+    })
+  }
 
-  const grabCurrentUserUsername = () : string => {
-    return currentUser.map((user : any) => {
+  const grabCurrentUserUsername = (): string => {
+    return currentUser.map((user: any) => {
       return user.username
     })
   }
 
 
-  const LogOut = () : void  => {
+  const LogOut = (): void => {
     localStorage.clear();
     history.push("/login");
   };
 
 
-
-
   return (
-    <div className="home-page flex-box-container">
+    <div className="home-page">
       <Jumbotron fluid>
         <Container>
           <h1>Welcome Back to Roffy's Forum User {localStorage.getItem('username')}</h1>
@@ -155,10 +158,10 @@ const HomePage: React.FC = () => {
                 </Nav>
                 <Button className={'bootstrapLogOut'}  variant="outline-info"  onClick={() => LogOut()}>Log Out</Button>
               </Navbar>
-                <img  className={'poster1'} src={poster1} />
-                <img className={'poster2'} src={poster2} />
-                <img className={'poster3'} src={poster3} />
-               <img className={'poster4'} src={poster4} />
+              <img  className={'poster1'} src={poster1} />
+              <img className={'poster2'} src={poster2} />
+              <img className={'poster3'} src={poster3} />
+              <img className={'poster4'} src={poster4} />
 
             </div>
           } else {
@@ -194,7 +197,7 @@ const HomePage: React.FC = () => {
                 >
                   <Link to={`/postsOnPage/${post.id}`}>{post.title}</Link>
                 </li>
-            );
+              );
             })}
           {renderPagination()}
         </ul>

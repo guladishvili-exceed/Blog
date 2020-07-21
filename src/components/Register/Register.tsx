@@ -57,46 +57,46 @@ const Register : React.FunctionComponent  = () => {
 
 
   return (
-    <div className="register-container">
-      <h1 className={"registerH1"}>Registration</h1>
-      <div className="registration-username">
-        <label className={'label-name'}>
-          <span className={'content-name'}>Username</span>
-        </label>
-        <input
-          ref={emailEl}
-          type={"text"}
-          placeholder={"..."}
-          onKeyPress = {handleKeyPress}
-        />
-      </div>
-      <div className="registration-password">
-        <label className={'label-name'}>
-          <span className={'content-name'}>Password</span>
-        </label>
-        <input
-          ref={passwordEl}
-          type={"password"}
-          placeholder={"..."}
-          onKeyPress = {handleKeyPress}
-        />
-      </div>
-      <div className="registration-confirmPassword">
-        <label className={'label-name'}>
-          <span className={'content-name'}>Confirm Password</span>
-        </label>
-        <input
-          ref={confirmpasswordEl}
-          type={"password"}
-          placeholder={"..."}
-          onKeyPress = {handleKeyPress}
-        />
-      </div>
-      <div id={"buttons"} className="registration-buttons">
-        <Link to={"/login"}>
-          <button id={'register-login-button'}>Log In</button>
-        </Link>
-        <button onClick={() => registerUser()}>Register</button>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12 col-xs-12">
+          <h1>Register</h1>
+        </div>
+        <div className="col-md-12 col-xs-12 registration-username">
+          <label>Username : </label>
+          <input
+            ref={emailEl}
+            type={"text"}
+            placeholder={"..."}
+            onKeyPress = {handleKeyPress}
+          />
+        </div>
+        <div className="col-md-12 col-xs-12 registration-password">
+          <label>Password : </label>
+          <input
+            ref={passwordEl}
+            type={"password"}
+            placeholder={"..."}
+            onKeyPress = {handleKeyPress}
+          />
+        </div>
+        <div className="col-lg-12  col-xs-12 registration-confirmPassword ">
+          <label >Confirm Password : </label>
+          <input
+            ref={confirmpasswordEl}
+            type={"password"}
+            placeholder={"..."}
+            onKeyPress = {handleKeyPress}
+          />
+        </div>
+        <div className="col-md-6 col-xs-12">
+          <Link to={"/login"}>
+            <button id={'register-login-button'}>Log In</button>
+          </Link>
+        </div>
+        <div className="col-md-6 col-xs-12">
+            <button onClick={() => registerUser()}>Register</button>
+        </div>
       </div>
     </div>
   );

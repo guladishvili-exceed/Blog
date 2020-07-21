@@ -52,23 +52,26 @@ const LogIn: React.FunctionComponent = () => {
   }
 
   return (
-    <div className={"LogIn"}>
-      <h1 className={"logInh1"}>Log In</h1>
-      <div className={"logInPlace"}>
-        <div className="login-username">
-          <label className={'label-name'}>
-            <span className={'content-name'}>Username</span>
-          </label>
-          <input onKeyPress={handleKeyPress} autoComplete={'off'} name={'username'} placeholder={"..."}
+    <div className={"container"}>
+      <div className="row">
+        <div className="col-md-12 col-xs-12">
+          <h1>Log In</h1>
+        </div>
+        <div className="col-md-12 col-xs-12 login-username">
+          <label>Username : </label>
+          <input onKeyPress={handleKeyPress} autoComplete={'off'} name={'username'}
+                 placeholder={"..."}
                  type={"text"} ref={usernameEl}/>
         </div>
-        <div className="username-password">
-          <label>Password</label>
+        <div className="col-md-12 col-xs-12 username-password">
+          <label>Password : </label>
           <input onKeyPress={handleKeyPress} type={"password"} placeholder={"..."}
                  ref={passwordEl}/>
         </div>
-        <div className="login-buttons">
+        <div className="col-md-6 col-xs-12">
           <button onClick={() => submitLogin()}>Log In</button>
+        </div>
+        <div className="col-md-6 col-xs-12">
           <button id={'login-registration'} onClick={() => history.push('/registration')}>Registration</button>
         </div>
       </div>
